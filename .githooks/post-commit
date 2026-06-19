@@ -1,0 +1,11 @@
+#!/bin/sh
+# Hook post-commit o13sLife
+# Activer avec : git config core.hooksPath .githooks
+
+echo "[post-commit] Mise à jour du changelog..."
+echo "  Lance /changelog dans Claude Code pour mettre à jour CHANGELOG.md"
+
+echo "[post-commit] Mise à jour de la documentation..."
+echo "  Lance /doc-update dans Claude Code pour mettre à jour la documentation"
+
+exit 0

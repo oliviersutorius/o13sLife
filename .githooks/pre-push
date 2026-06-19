@@ -1,0 +1,22 @@
+#!/bin/sh
+# Hook pre-push o13sLife
+# Activer avec : git config core.hooksPath .githooks
+
+echo "[pre-push] Lancement de la suite de tests complète..."
+
+echo "[pre-push] Tests Pest (couverture 95%)..."
+./vendor/bin/pest --coverage --min=95
+if [ $? -ne 0 ]; then
+  echo "[pre-push] ❌ Les tests échouent ou la couverture est sous 95%. Push annulé."
+  exit 1
+fi
+
+echo "[pre-push] Tests E2E Playwright..."
+npx playwright test
+if [ $? -ne 0 ]; then
+  echo "[pre-push] ❌ Les tests E2E échouent. Push annulé."
+  exit 1
+fi
+
+echo "[pre-push] ✅ Tous les tests sont passés. Push autorisé."
+exit 0

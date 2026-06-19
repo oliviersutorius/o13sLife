@@ -1,0 +1,90 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan make:*)",
+      "Bash(php artisan migrate)",
+      "Bash(php artisan migrate:status)",
+      "Bash(php artisan migrate:rollback)",
+      "Bash(php artisan db:seed)",
+      "Bash(php artisan serve)",
+      "Bash(php artisan route:list)",
+      "Bash(php artisan config:cache)",
+      "Bash(php artisan config:clear)",
+      "Bash(php artisan cache:clear)",
+      "Bash(php artisan view:clear)",
+      "Bash(php artisan optimize:clear)",
+      "Bash(composer install)",
+      "Bash(composer update)",
+      "Bash(composer require *)",
+      "Bash(composer remove *)",
+      "Bash(composer audit)",
+      "Bash(composer dump-autoload)",
+      "Bash(./vendor/bin/pest*)",
+      "Bash(./vendor/bin/pint*)",
+      "Bash(npm install)",
+      "Bash(npm run *)",
+      "Bash(npx playwright *)",
+      "Bash(k6 run *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git pull *)"
+    ],
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(rm -r *)",
+      "Bash(*migrate:fresh*)",
+      "Bash(*migrate:reset*)",
+      "Bash(*migrate:refresh*)",
+      "Bash(*DROP TABLE*)",
+      "Bash(*DROP DATABASE*)",
+      "Bash(*TRUNCATE*)",
+      "Edit(.env)",
+      "Edit(.env.*)",
+      "Write(.env)",
+      "Write(.env.*)"
+    ]
+  },
+  "env": {
+    "APP_ENV": "local"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[o13sLife] Commande bash en cours d exécution...'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[o13sLife] Fichier modifié — pense à lancer ./vendor/bin/pint si tu as modifié du PHP.'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[o13sLife] Session terminée. Rappels : (1) Ouvrir une PR si la feature est prête, (2) Vérifier les tests avec ./vendor/bin/pest --coverage --min=95, (3) Chaque commit doit référencer une issue GitHub.'"
+          }
+        ]
+      }
+    ]
+  }
+}
