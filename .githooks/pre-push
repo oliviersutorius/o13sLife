@@ -11,11 +11,15 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "[pre-push] Tests E2E Playwright..."
-npx playwright test
-if [ $? -ne 0 ]; then
-  echo "[pre-push] ❌ Les tests E2E échouent. Push annulé."
-  exit 1
+if find tests/e2e -name "*.spec.*" 2>/dev/null | grep -q .; then
+  echo "[pre-push] Tests E2E Playwright..."
+  npx playwright test
+  if [ $? -ne 0 ]; then
+    echo "[pre-push] ❌ Les tests E2E échouent. Push annulé."
+    exit 1
+  fi
+else
+  echo "[pre-push] ⏭️  Aucun test E2E trouvé — Playwright ignoré."
 fi
 
 echo "[pre-push] ✅ Tous les tests sont passés. Push autorisé."
