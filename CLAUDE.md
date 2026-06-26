@@ -1,5 +1,49 @@
 # o13sLife — Claude Code Configuration
 
+## Contexte domaine
+
+**o13sLife** est une page web personnelle qui présente un CV de manière soignée et professionnelle. Elle est consultable publiquement par tous (recruteurs, contacts) et administrée via un back-office privé. Le contenu est multilingue (FR par défaut, EN, IT, ES) et géré via un système brouillon / publication.
+
+### Entités principales
+
+| Entité | Description |
+|---|---|
+| **Profil** | En-tête du CV : photo, titre professionnel, coordonnées, liens LinkedIn/GitHub. Unique. |
+| **Expérience** | Poste occupé : titre, entreprise, dates, description, technologies. Triées par date décroissante. |
+| **Formation** | Diplôme : école, année, intitulé. |
+| **Compétence** | Savoir-faire technique groupé par catégorie, avec niveau débutant/intermédiaire/expert. |
+| **Langue** | Langue maîtrisée avec niveau libre (Natif, Professionnel, DALF C2…). |
+| **CentreInteret** | Mot ou courte expression décrivant un intérêt personnel. |
+| **Message** | Message envoyé via le formulaire de contact (nom, email, message). |
+
+### Règles métier critiques
+
+1. **Rubrique vide = rubrique masquée** — toute section sans contenu n'est pas affichée sur la page publique.
+2. **Brouillon / Publication** — toute modification est en brouillon jusqu'à publication explicite.
+3. **Accès back-office unique** — un seul compte administrateur, pas d'inscription publique.
+
+### Types d'utilisateurs
+
+| Rôle | Description |
+|---|---|
+| **Administrateur** | Propriétaire du CV, seul accès au back-office. |
+| **Visiteur** | Toute personne consultant la page publique (recruteur, contact…). |
+
+### Glossaire condensé
+
+| Terme | Définition courte |
+|---|---|
+| Rubrique | Section thématique du CV (Expériences, Formations…) |
+| Brouillon | Contenu modifié non encore visible publiquement |
+| Publication | Acte rendant le brouillon visible sur la page publique |
+| Locale | Langue d'affichage de l'interface (fr, en, it, es) — ≠ entité Langue du CV |
+| Back-office | Interface d'administration privée |
+| Visiteur | Personne consultant la page publique sans être connectée |
+
+> Référence complète : `docs/DOMAIN.md`, `docs/GLOSSARY.md`, `docs/EPICS.md`
+
+---
+
 ## Projet
 
 **o13sLife** est une application web personnelle, développée en solo, rendue côté serveur avec PHP/Laravel.
