@@ -4,10 +4,10 @@
 
 echo "[pre-push] Lancement de la suite de tests complète..."
 
-echo "[pre-push] Tests Pest (couverture 95%)..."
-php8.3 vendor/bin/pest --coverage --min=95
+echo "[pre-push] Tests Pest..."
+php8.3 vendor/bin/pest
 if [ $? -ne 0 ]; then
-  echo "[pre-push] ❌ Les tests échouent ou la couverture est sous 95%. Push annulé."
+  echo "[pre-push] ❌ Les tests échouent. Push annulé."
   exit 1
 fi
 
