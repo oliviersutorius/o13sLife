@@ -1,0 +1,14 @@
+#!/bin/sh
+# Hook commit-msg o13sLife
+
+COMMIT_MSG=$(cat "$1")
+
+if ! echo "$COMMIT_MSG" | grep -qE "^(feat|fix|chore|docs|test|refactor|style|perf)\(#[0-9]+\): .+"; then
+  echo "[commit-msg] ❌ Format du commit invalide."
+  echo "  Attendu : type(#issue): description"
+  echo "  Exemple : feat(#12): ajouter le composant de profil"
+  exit 1
+fi
+
+echo "[commit-msg] ✅ Format du commit valide."
+exit 0
