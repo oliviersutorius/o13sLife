@@ -40,6 +40,8 @@ class ProfilForm extends Component
 
     public ?string $photo_actuelle = null;
 
+    public string $successMessage = '';
+
     public function mount(): void
     {
         $profil = Profil::first();
@@ -80,7 +82,7 @@ class ProfilForm extends Component
 
         $profil->save();
 
-        session()->flash('success', __('profil.sauvegarde_ok'));
+        $this->successMessage = __('profil.sauvegarde_ok');
     }
 
     public function publier(): void
@@ -109,8 +111,7 @@ class ProfilForm extends Component
         $profil->save();
 
         $this->is_published = true;
-
-        session()->flash('success', __('profil.publication_ok'));
+        $this->successMessage = __('profil.publication_ok');
     }
 
     public function render(): View

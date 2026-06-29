@@ -20,7 +20,7 @@ it('affiche la page profil à un admin connecté', function () {
     $this->actingAs($this->admin)
         ->get(route('admin.profil.edit'))
         ->assertStatus(200)
-        ->assertSeeLivewire(ProfilForm::class);
+        ->assertSee(__('profil.titre_page'));
 });
 
 it('charge les données du profil existant au montage', function () {
@@ -42,7 +42,7 @@ it('sauvegarde le profil en brouillon', function () {
         ->set('email', 'chef@example.com')
         ->call('sauvegarder')
         ->assertHasNoErrors()
-        ->assertSessionHas('success');
+        ->assertSet('successMessage', __('profil.sauvegarde_ok'));
 
     $profil = Profil::first();
     expect($profil->titre)->toBe('Chef de Projet')
@@ -57,7 +57,7 @@ it('publie le profil et le rend visible', function () {
         ->set('email', 'archi@example.com')
         ->call('publier')
         ->assertHasNoErrors()
-        ->assertSessionHas('success')
+        ->assertSet('successMessage', __('profil.publication_ok'))
         ->assertSet('is_published', true);
 
     expect(Profil::first()->is_published)->toBeTrue();

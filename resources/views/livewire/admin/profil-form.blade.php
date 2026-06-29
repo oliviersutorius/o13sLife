@@ -1,4 +1,10 @@
 <div>
+    @if($successMessage)
+    <div class="mb-6 rounded-md bg-green-50 p-4 text-sm text-green-700" role="alert">
+        {{ $successMessage }}
+    </div>
+    @endif
+
     <div class="mb-6 flex items-center justify-between">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('profil.titre_page') }}</h2>
         @if($is_published)
