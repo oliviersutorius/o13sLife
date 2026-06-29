@@ -125,3 +125,41 @@ it('annule le formulaire et réinitialise les champs', function () {
         ->assertSet('showForm', false)
         ->assertSet('ecole', '');
 });
+
+it('publie une formation et affiche le message de succès', function () {
+    $formation = Formation::factory()->create(['is_published' => false]);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $formation->id)
+        ->assertSet('successMessage', __('formation.publication_ok'));
+
+    expect($formation->fresh()->is_published)->toBeTrue();
+});
+
+it('dépublie une formation et affiche le message de succès', function () {
+    $formation = Formation::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $formation->id)
+        ->assertSet('successMessage', __('formation.depublication_ok'));
+
+    expect($formation->fresh()->is_published)->toBeFalse();
+});
+
+it('affiche le badge publié pour une formation publiée', function () {
+    Formation::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('formation.statut_publie'));
+});
+
+it('affiche le badge brouillon pour une formation non publiée', function () {
+    Formation::factory()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('formation.statut_brouillon'));
+});

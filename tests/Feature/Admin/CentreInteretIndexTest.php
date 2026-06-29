@@ -105,3 +105,41 @@ it('annule le formulaire et réinitialise les champs', function () {
         ->assertSet('showForm', false)
         ->assertSet('libelle', '');
 });
+
+it('publie un centre d\'intérêt et affiche le message de succès', function () {
+    $centreInteret = CentreInteret::factory()->create(['is_published' => false]);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $centreInteret->id)
+        ->assertSet('successMessage', __('centre_interet.publication_ok'));
+
+    expect($centreInteret->fresh()->is_published)->toBeTrue();
+});
+
+it('dépublie un centre d\'intérêt et affiche le message de succès', function () {
+    $centreInteret = CentreInteret::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $centreInteret->id)
+        ->assertSet('successMessage', __('centre_interet.depublication_ok'));
+
+    expect($centreInteret->fresh()->is_published)->toBeFalse();
+});
+
+it('affiche le badge publié pour un centre d\'intérêt publié', function () {
+    CentreInteret::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('centre_interet.statut_publie'));
+});
+
+it('affiche le badge brouillon pour un centre d\'intérêt non publié', function () {
+    CentreInteret::factory()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('centre_interet.statut_brouillon'));
+});

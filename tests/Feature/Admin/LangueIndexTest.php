@@ -125,3 +125,41 @@ it('annule le formulaire et réinitialise les champs', function () {
         ->assertSet('showForm', false)
         ->assertSet('langue', '');
 });
+
+it('publie une langue et affiche le message de succès', function () {
+    $langue = Langue::factory()->create(['is_published' => false]);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $langue->id)
+        ->assertSet('successMessage', __('langue.publication_ok'));
+
+    expect($langue->fresh()->is_published)->toBeTrue();
+});
+
+it('dépublie une langue et affiche le message de succès', function () {
+    $langue = Langue::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $langue->id)
+        ->assertSet('successMessage', __('langue.depublication_ok'));
+
+    expect($langue->fresh()->is_published)->toBeFalse();
+});
+
+it('affiche le badge publié pour une langue publiée', function () {
+    Langue::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('langue.statut_publie'));
+});
+
+it('affiche le badge brouillon pour une langue non publiée', function () {
+    Langue::factory()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('langue.statut_brouillon'));
+});

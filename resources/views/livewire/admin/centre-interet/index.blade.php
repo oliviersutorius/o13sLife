@@ -72,6 +72,7 @@
                 <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">{{ __('centre_interet.libelle') }}</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Statut</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Traductions</th>
                     <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
                 </tr>
             </thead>
@@ -89,6 +90,13 @@
                                 {{ __('centre_interet.statut_brouillon') }}
                             </span>
                         @endif
+                    </td>
+                    <td class="px-6 py-4">
+                        @livewire('admin.translation-badges', [
+                            'modelClass' => \App\Models\CentreInteret::class,
+                            'modelId'    => $item->id,
+                            'fields'     => ['libelle'],
+                        ], 'ci-badges-'.$item->id)
                     </td>
                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                         <div class="flex items-center justify-end gap-2">

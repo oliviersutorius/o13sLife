@@ -9,6 +9,13 @@
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
 
+    {{-- Barre de langue --}}
+    <div class="bg-gray-800 py-1.5">
+        <div class="mx-auto flex max-w-4xl items-center justify-end px-4 sm:px-6 lg:px-8">
+            @livewire('locale-switcher')
+        </div>
+    </div>
+
     {{-- En-tête / Profil --}}
     @if($profil)
     <header class="bg-white shadow-sm" role="banner">

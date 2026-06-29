@@ -129,3 +129,41 @@ it('annule le formulaire et réinitialise les champs', function () {
         ->assertSet('showForm', false)
         ->assertSet('categorie', '');
 });
+
+it('publie une compétence et affiche le message de succès', function () {
+    $competence = Competence::factory()->create(['is_published' => false]);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $competence->id)
+        ->assertSet('successMessage', __('competence.publication_ok'));
+
+    expect($competence->fresh()->is_published)->toBeTrue();
+});
+
+it('dépublie une compétence et affiche le message de succès', function () {
+    $competence = Competence::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $competence->id)
+        ->assertSet('successMessage', __('competence.depublication_ok'));
+
+    expect($competence->fresh()->is_published)->toBeFalse();
+});
+
+it('affiche le badge publié pour une compétence publiée', function () {
+    Competence::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('competence.statut_publie'));
+});
+
+it('affiche le badge brouillon pour une compétence non publiée', function () {
+    Competence::factory()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('competence.statut_brouillon'));
+});
