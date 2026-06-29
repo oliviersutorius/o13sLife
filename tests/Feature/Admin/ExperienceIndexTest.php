@@ -144,3 +144,41 @@ it('convertit les technologies en tableau lors de la sauvegarde', function () {
     $experience = Experience::first();
     expect($experience->technologies)->toBe(['PHP', 'Laravel', 'Vue.js']);
 });
+
+it('publie une expérience et affiche le message de succès', function () {
+    $experience = Experience::factory()->create(['is_published' => false]);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $experience->id)
+        ->assertSet('successMessage', __('experience.publication_ok'));
+
+    expect($experience->fresh()->is_published)->toBeTrue();
+});
+
+it('dépublie une expérience et affiche le message de succès', function () {
+    $experience = Experience::factory()->publié()->create();
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $experience->id)
+        ->assertSet('successMessage', __('experience.depublication_ok'));
+
+    expect($experience->fresh()->is_published)->toBeFalse();
+});
+
+it('affiche le badge publié pour une expérience publiée', function () {
+    Experience::factory()->publié()->create(['titre_poste' => 'Poste Publié']);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('experience.statut_publie'));
+});
+
+it('affiche le badge brouillon pour une expérience non publiée', function () {
+    Experience::factory()->create(['titre_poste' => 'Poste Brouillon']);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->assertSee(__('experience.statut_brouillon'));
+});
