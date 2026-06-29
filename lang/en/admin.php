@@ -6,6 +6,7 @@ return [
     'title' => 'Administration',
     'backoffice' => 'Back-office',
     'main_nav' => 'Main navigation',
+    'secondary_nav' => 'Section navigation',
     'login_title' => 'Login',
     'email' => 'Email address',
     'password' => 'Password',
