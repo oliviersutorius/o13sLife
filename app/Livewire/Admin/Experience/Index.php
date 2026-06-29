@@ -92,6 +92,16 @@ class Index extends Component
         $this->chargerItems();
     }
 
+    public function togglePublication(int $id): void
+    {
+        $item = Experience::findOrFail($id);
+        $item->update(['is_published' => ! $item->is_published]);
+        $this->successMessage = $item->is_published
+            ? __('experience.publication_ok')
+            : __('experience.depublication_ok');
+        $this->chargerItems();
+    }
+
     public function supprimer(int $id): void
     {
         Experience::findOrFail($id)->delete();

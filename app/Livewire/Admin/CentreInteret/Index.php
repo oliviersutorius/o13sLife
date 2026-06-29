@@ -61,6 +61,16 @@ class Index extends Component
         $this->chargerItems();
     }
 
+    public function togglePublication(int $id): void
+    {
+        $item = CentreInteret::findOrFail($id);
+        $item->update(['is_published' => ! $item->is_published]);
+        $this->successMessage = $item->is_published
+            ? __('centre_interet.publication_ok')
+            : __('centre_interet.depublication_ok');
+        $this->chargerItems();
+    }
+
     public function supprimer(int $id): void
     {
         CentreInteret::findOrFail($id)->delete();

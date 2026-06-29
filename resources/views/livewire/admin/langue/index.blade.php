@@ -118,6 +118,14 @@
                         <div class="flex items-center justify-end gap-2">
                             <button
                                 type="button"
+                                wire:click="togglePublication({{ $item->id }})"
+                                class="{{ $item->is_published ? 'text-yellow-600 hover:text-yellow-800' : 'text-green-600 hover:text-green-800' }} focus:outline-none focus:underline"
+                                aria-label="{{ $item->is_published ? __('langue.depublier') : __('langue.publier') }}"
+                            >
+                                {{ $item->is_published ? __('langue.depublier') : __('langue.publier') }}
+                            </button>
+                            <button
+                                type="button"
                                 wire:click="editer({{ $item->id }})"
                                 class="text-blue-600 hover:text-blue-800 focus:outline-none focus:underline"
                             >

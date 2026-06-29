@@ -68,6 +68,16 @@ class Index extends Component
         $this->chargerItems();
     }
 
+    public function togglePublication(int $id): void
+    {
+        $item = Langue::findOrFail($id);
+        $item->update(['is_published' => ! $item->is_published]);
+        $this->successMessage = $item->is_published
+            ? __('langue.publication_ok')
+            : __('langue.depublication_ok');
+        $this->chargerItems();
+    }
+
     public function supprimer(int $id): void
     {
         Langue::findOrFail($id)->delete();
