@@ -6,21 +6,25 @@ namespace App\Livewire\Admin;
 
 use App\Http\Middleware\SetLocale;
 use App\Jobs\TranslateContentJob;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\CentreInteret;
+use App\Models\Competence;
+use App\Models\Experience;
+use App\Models\Formation;
+use App\Models\Langue;
+use App\Models\Profil;
 use Illuminate\View\View;
 use Livewire\Component;
 
 class TranslationBadges extends Component
 {
-    public string $modelClass;
-
-    public int $modelId;
-
-    public array $fields;
-
-    public bool $translating = false;
-
-    public string $successMessage = '';
+    private const ALLOWED_MODELS = [
+        Profil::class,
+        Experience::class,
+        Formation::class,
+        Competence::class,
+        Langue::class,
+        CentreInteret::class,
+    ];
 
     public const LOCALE_FLAGS = [
         'fr' => '🇫🇷',
@@ -29,16 +33,30 @@ class TranslationBadges extends Component
         'es' => '🇪🇸',
     ];
 
+    public string $modelClass;
+
+    public int $modelId;
+
+    public array $fields;
+
+    /** @var array<string, bool> */
+    public array $translationStatus = [];
+
+    public string $successMessage = '';
+
     public function mount(string $modelClass, int $modelId, array $fields): void
     {
+        abort_unless(in_array($modelClass, self::ALLOWED_MODELS, true), 403);
+
         $this->modelClass = $modelClass;
         $this->modelId = $modelId;
         $this->fields = $fields;
+        $this->translationStatus = $this->computeTranslationStatus();
     }
 
-    public function getTranslationStatus(): array
+    /** @return array<string, bool> */
+    public function computeTranslationStatus(): array
     {
-        /** @var Model $model */
         $model = $this->modelClass::findOrFail($this->modelId);
         $status = [];
 
@@ -46,9 +64,7 @@ class TranslationBadges extends Component
             $hasAll = true;
 
             foreach ($this->fields as $field) {
-                $value = $model->getTranslation($field, $locale, false);
-
-                if (empty($value)) {
+                if (empty($model->getTranslation($field, $locale, false))) {
                     $hasAll = false;
                     break;
                 }
@@ -62,7 +78,7 @@ class TranslationBadges extends Component
 
     public function traduire(): void
     {
-        $this->translating = true;
+        abort_unless(in_array($this->modelClass, self::ALLOWED_MODELS, true), 403);
 
         TranslateContentJob::dispatch(
             $this->modelClass,
@@ -70,13 +86,11 @@ class TranslationBadges extends Component
             $this->fields,
         );
 
-        $this->successMessage = 'Traduction en cours…';
+        $this->successMessage = __('common.traduction_en_cours');
     }
 
     public function render(): View
     {
-        return view('livewire.admin.translation-badges', [
-            'translationStatus' => $this->getTranslationStatus(),
-        ]);
+        return view('livewire.admin.translation-badges');
     }
 }

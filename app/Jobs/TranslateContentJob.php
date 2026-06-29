@@ -26,15 +26,19 @@ class TranslateContentJob implements ShouldQueue
         $model = $this->modelClass::findOrFail($this->modelId);
 
         foreach ($this->fields as $field) {
-            $sourcText = $model->getTranslation($field, 'fr');
+            $sourceText = $model->getTranslation($field, 'fr');
 
-            if (empty($sourcText)) {
+            if (empty($sourceText)) {
                 continue;
             }
 
             foreach ($this->targetLocales as $locale) {
-                $translated = $service->translate($sourcText, 'fr', $locale);
-                $model->setTranslation($field, $locale, $translated);
+                try {
+                    $translated = $service->translate($sourceText, 'fr', $locale);
+                    $model->setTranslation($field, $locale, $translated);
+                } catch (\Throwable $e) {
+                    \Log::warning("Translation failed [{$this->modelClass}#{$this->modelId}] {$field}/{$locale}: {$e->getMessage()}");
+                }
             }
         }
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    'skip_to_content' => 'Aller au contenu principal',
     'title' => 'Mon CV',
     'meta_description' => 'Curriculum vitae',
     'profile_photo_alt' => 'Photo de profil',

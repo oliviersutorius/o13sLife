@@ -24,6 +24,7 @@ class LocaleSwitcher extends Component
         $this->currentLocale = app()->getLocale();
     }
 
+    /** Switch the active locale; silently ignores unsupported values. */
     public function switchLocale(string $locale): void
     {
         if (! in_array($locale, SetLocale::SUPPORTED_LOCALES, true)) {
