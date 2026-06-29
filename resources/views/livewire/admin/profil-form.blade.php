@@ -17,11 +17,10 @@
                     {{ __('profil.statut_brouillon') }}
                 </span>
             @endif
-            @php $profil = \App\Models\Profil::first(); @endphp
-            @if($profil)
+            @if($profilId)
                 @livewire('admin.translation-badges', [
                     'modelClass' => \App\Models\Profil::class,
-                    'modelId'    => $profil->id,
+                    'modelId'    => $profilId,
                     'fields'     => ['titre'],
                 ])
             @endif

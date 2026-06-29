@@ -15,7 +15,7 @@
                     ? 'bg-white/20 font-semibold text-white ring-1 ring-white/40'
                     : 'text-white/70 hover:bg-white/10 hover:text-white' }}"
             aria-label="{{ $info['label'] }}"
-            aria-current="{{ $currentLocale === $code ? 'true' : 'false' }}"
+            @if($currentLocale === $code) aria-current="true" @endif
         >
             <span aria-hidden="true">{{ $info['flag'] }}</span>
             <span class="hidden sm:inline">{{ $code }}</span>

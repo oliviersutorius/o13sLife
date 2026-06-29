@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Anthropic\Exceptions\ErrorException;
 use Anthropic\Laravel\Facades\Anthropic;
 
 class TranslationService
@@ -15,6 +16,11 @@ class TranslationService
         'es' => 'Spanish',
     ];
 
+    /**
+     * Translate a text from one locale to another using Claude Haiku.
+     *
+     * @throws ErrorException on API failure
+     */
     public function translate(string $text, string $sourceLocale, string $targetLocale): string
     {
         $sourceName = self::LOCALE_NAMES[$sourceLocale] ?? $sourceLocale;

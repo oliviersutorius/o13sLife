@@ -42,11 +42,14 @@ class ProfilForm extends Component
 
     public string $successMessage = '';
 
+    public ?int $profilId = null;
+
     public function mount(): void
     {
         $profil = Profil::first();
 
         if ($profil) {
+            $this->profilId = $profil->id;
             $this->titre = $profil->titre;
             $this->email = $profil->email;
             $this->telephone = $profil->telephone ?? '';
