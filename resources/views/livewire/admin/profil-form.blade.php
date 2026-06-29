@@ -5,17 +5,27 @@
     </div>
     @endif
 
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('profil.titre_page') }}</h2>
-        @if($is_published)
-            <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                {{ __('profil.statut_publie') }}
-            </span>
-        @else
-            <span class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
-                {{ __('profil.statut_brouillon') }}
-            </span>
-        @endif
+        <div class="flex flex-wrap items-center gap-3">
+            @if($is_published)
+                <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                    {{ __('profil.statut_publie') }}
+                </span>
+            @else
+                <span class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+                    {{ __('profil.statut_brouillon') }}
+                </span>
+            @endif
+            @php $profil = \App\Models\Profil::first(); @endphp
+            @if($profil)
+                @livewire('admin.translation-badges', [
+                    'modelClass' => \App\Models\Profil::class,
+                    'modelId'    => $profil->id,
+                    'fields'     => ['titre'],
+                ])
+            @endif
+        </div>
     </div>
 
     <form wire:submit="sauvegarder" enctype="multipart/form-data" novalidate>
