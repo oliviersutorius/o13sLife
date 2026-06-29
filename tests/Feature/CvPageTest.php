@@ -9,10 +9,6 @@ use App\Models\Formation;
 use App\Models\Langue;
 use App\Models\Profil;
 
-beforeEach(function () {
-    $this->withoutVite();
-});
-
 it('affiche la page CV publique', function () {
     $response = $this->get('/');
     $response->assertStatus(200);
