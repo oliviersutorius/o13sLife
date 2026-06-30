@@ -12,6 +12,7 @@ use App\Models\Experience;
 use App\Models\Formation;
 use App\Models\Langue;
 use App\Models\Profil;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -33,16 +34,28 @@ class TranslationBadges extends Component
         'es' => '🇪🇸',
     ];
 
+    /** Translation status is 'validated', 'auto', or 'missing' per locale. */
+    private const STATUS_VALIDATED = 'validated';
+
+    private const STATUS_AUTO = 'auto';
+
+    private const STATUS_MISSING = 'missing';
+
     public string $modelClass;
 
     public int $modelId;
 
     public array $fields;
 
-    /** @var array<string, bool> */
+    /** @var array<string, string> locale → 'validated'|'auto'|'missing' */
     public array $translationStatus = [];
 
     public string $successMessage = '';
+
+    public bool $showEditor = false;
+
+    /** @var array<string, array<string, string>> locale → field → value */
+    public array $translations = [];
 
     public function mount(string $modelClass, int $modelId, array $fields): void
     {
@@ -52,28 +65,105 @@ class TranslationBadges extends Component
         $this->modelId = $modelId;
         $this->fields = $fields;
         $this->translationStatus = $this->computeTranslationStatus();
+        $this->initTranslations();
     }
 
-    /** @return array<string, bool> */
-    public function computeTranslationStatus(): array
+    /** @return array<string, string> */
+    protected function computeTranslationStatus(): array
     {
         $model = $this->modelClass::findOrFail($this->modelId);
+        $validatedKeys = $model->translations_validated ?? [];
         $status = [];
 
         foreach (SetLocale::SUPPORTED_LOCALES as $locale) {
-            $hasAll = true;
+            $allFilled = true;
+            $allValidated = true;
 
             foreach ($this->fields as $field) {
-                if (empty($model->getTranslation($field, $locale, false))) {
-                    $hasAll = false;
+                $value = $model->getTranslation($field, $locale, false);
+
+                if (empty($value)) {
+                    $allFilled = false;
+                    $allValidated = false;
                     break;
+                }
+
+                if (! in_array("{$field}.{$locale}", $validatedKeys, true)) {
+                    $allValidated = false;
                 }
             }
 
-            $status[$locale] = $hasAll;
+            if (! $allFilled) {
+                $status[$locale] = self::STATUS_MISSING;
+            } elseif ($allValidated) {
+                $status[$locale] = self::STATUS_VALIDATED;
+            } else {
+                $status[$locale] = self::STATUS_AUTO;
+            }
         }
 
         return $status;
+    }
+
+    protected function initTranslations(): void
+    {
+        $model = $this->modelClass::findOrFail($this->modelId);
+        $this->translations = [];
+
+        foreach (SetLocale::SUPPORTED_LOCALES as $locale) {
+            if ($locale === 'fr') {
+                continue;
+            }
+
+            foreach ($this->fields as $field) {
+                $this->translations[$locale][$field] = $model->getTranslation($field, $locale, false);
+            }
+        }
+    }
+
+    public function toggleEditor(): void
+    {
+        $this->showEditor = ! $this->showEditor;
+
+        if ($this->showEditor) {
+            $this->initTranslations();
+        }
+
+        $this->successMessage = '';
+    }
+
+    public function sauvegarderTraductions(): void
+    {
+        abort_unless(in_array($this->modelClass, self::ALLOWED_MODELS, true), 403);
+
+        $model = $this->modelClass::findOrFail($this->modelId);
+        $validatedKeys = $model->translations_validated ?? [];
+
+        foreach ($this->translations as $locale => $fields) {
+            foreach ($fields as $field => $value) {
+                $model->setTranslation($field, $locale, (string) $value);
+
+                $key = "{$field}.{$locale}";
+
+                if (! empty($value)) {
+                    if (! in_array($key, $validatedKeys, true)) {
+                        $validatedKeys[] = $key;
+                    }
+                } else {
+                    $validatedKeys = array_values(array_filter(
+                        $validatedKeys,
+                        fn ($k) => $k !== $key,
+                    ));
+                }
+            }
+        }
+
+        $model->translations_validated = array_values($validatedKeys);
+        $model->save();
+
+        $this->translationStatus = $this->computeTranslationStatus();
+        $this->showEditor = false;
+        $this->successMessage = __('common.traductions_sauvegardees');
     }
 
     public function traduire(): void
@@ -87,6 +177,19 @@ class TranslationBadges extends Component
         );
 
         $this->successMessage = __('common.traduction_en_cours');
+    }
+
+    /** Human-readable label for a field name. */
+    public function labelFor(string $field): string
+    {
+        return Str::headline($field);
+    }
+
+    /** Reference (FR) value for a field. */
+    public function frValue(string $field): string
+    {
+        return $this->modelClass::findOrFail($this->modelId)
+            ->getTranslation($field, 'fr', false);
     }
 
     public function render(): View

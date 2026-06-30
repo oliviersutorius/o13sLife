@@ -27,6 +27,7 @@ class Formation extends Model
         return [
             'annee' => 'integer',
             'is_published' => 'boolean',
+            'translations_validated' => 'array',
         ];
     }
 

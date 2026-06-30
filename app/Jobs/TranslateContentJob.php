@@ -8,6 +8,7 @@ use App\Services\TranslationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 
 class TranslateContentJob implements ShouldQueue
 {
@@ -36,12 +37,23 @@ class TranslateContentJob implements ShouldQueue
                 try {
                     $translated = $service->translate($sourceText, 'fr', $locale);
                     $model->setTranslation($field, $locale, $translated);
+                    // Auto-translation clears the validated flag for this field/locale.
+                    $this->clearValidation($model, $field, $locale);
                 } catch (\Throwable $e) {
-                    \Log::warning("Translation failed [{$this->modelClass}#{$this->modelId}] {$field}/{$locale}: {$e->getMessage()}");
+                    Log::warning("Translation failed [{$this->modelClass}#{$this->modelId}] {$field}/{$locale}: {$e->getMessage()}");
                 }
             }
         }
 
         $model->save();
+    }
+
+    private function clearValidation(Model $model, string $field, string $locale): void
+    {
+        $key = "{$field}.{$locale}";
+        $validated = $model->translations_validated ?? [];
+        $model->translations_validated = array_values(
+            array_filter($validated, fn ($k) => $k !== $key),
+        );
     }
 }

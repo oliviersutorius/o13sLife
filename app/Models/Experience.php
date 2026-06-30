@@ -32,6 +32,7 @@ class Experience extends Model
             'date_fin' => 'date',
             'technologies' => 'array',
             'is_published' => 'boolean',
+            'translations_validated' => 'array',
         ];
     }
 
