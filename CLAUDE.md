@@ -179,6 +179,7 @@ php artisan migrate:status
 | **Auditeur sécurité** | Audit OWASP, secrets, dépendances | `composer audit`, Dependabot, `/security-check` |
 | **UX/Design** | Cohérence design, accessibilité WCAG | Composants Livewire, Tailwind, responsive |
 | **i18n** | Chaînes de traduction, couverture i18n | Vues Blade, composants, fichiers `lang/` |
+| **Traducteur** | Traduction automatique du contenu CV via Claude Haiku | `TranslateContentJob`, `TranslationService`, `TranslationBadges` |
 
 **Chaîne d'intervention :** Développeur → Reviewer N1 → Humain → merge
 

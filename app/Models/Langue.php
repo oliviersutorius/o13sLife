@@ -25,6 +25,7 @@ class Langue extends Model
     {
         return [
             'is_published' => 'boolean',
+            'translations_validated' => 'array',
         ];
     }
 
