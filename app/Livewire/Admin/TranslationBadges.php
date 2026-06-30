@@ -71,6 +71,7 @@ class TranslationBadges extends Component
         $this->initTranslations();
     }
 
+    /** Loads and caches the model for the duration of the current request. */
     protected function loadModel(): Model
     {
         if ($this->cachedModel === null) {
@@ -117,6 +118,7 @@ class TranslationBadges extends Component
         return $status;
     }
 
+    /** Populates $this->translations with non-FR values from the model. */
     protected function initTranslations(): void
     {
         $model = $this->loadModel();
@@ -153,7 +155,15 @@ class TranslationBadges extends Component
         $validatedKeys = $model->translations_validated ?? [];
 
         foreach ($this->translations as $locale => $fields) {
+            if (! in_array($locale, SetLocale::SUPPORTED_LOCALES, true)) {
+                continue;
+            }
+
             foreach ($fields as $field => $value) {
+                if (! in_array($field, $this->fields, true)) {
+                    continue;
+                }
+
                 $model->setTranslation($field, $locale, (string) $value);
 
                 $key = "{$field}.{$locale}";

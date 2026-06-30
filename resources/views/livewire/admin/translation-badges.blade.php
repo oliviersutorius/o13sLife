@@ -46,7 +46,7 @@
     </div>
 
     {{-- Légende --}}
-    <div class="flex items-center gap-3 text-xs text-gray-400">
+    <div class="flex items-center gap-3 text-xs text-gray-600">
         <span><span class="inline-block h-2 w-2 rounded-full bg-green-400"></span> {{ __('common.legende_valide') }}</span>
         <span><span class="inline-block h-2 w-2 rounded-full bg-amber-400"></span> {{ __('common.legende_auto') }}</span>
         <span><span class="inline-block h-2 w-2 rounded-full bg-gray-300"></span> {{ __('common.legende_manquant') }}</span>
