@@ -12,6 +12,7 @@ use App\Models\Experience;
 use App\Models\Formation;
 use App\Models\Langue;
 use App\Models\Profil;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -57,6 +58,8 @@ class TranslationBadges extends Component
     /** @var array<string, array<string, string>> locale → field → value */
     public array $translations = [];
 
+    protected ?Model $cachedModel = null;
+
     public function mount(string $modelClass, int $modelId, array $fields): void
     {
         abort_unless(in_array($modelClass, self::ALLOWED_MODELS, true), 403);
@@ -68,10 +71,19 @@ class TranslationBadges extends Component
         $this->initTranslations();
     }
 
+    protected function loadModel(): Model
+    {
+        if ($this->cachedModel === null) {
+            $this->cachedModel = $this->modelClass::findOrFail($this->modelId);
+        }
+
+        return $this->cachedModel;
+    }
+
     /** @return array<string, string> */
     protected function computeTranslationStatus(): array
     {
-        $model = $this->modelClass::findOrFail($this->modelId);
+        $model = $this->loadModel();
         $validatedKeys = $model->translations_validated ?? [];
         $status = [];
 
@@ -107,7 +119,7 @@ class TranslationBadges extends Component
 
     protected function initTranslations(): void
     {
-        $model = $this->modelClass::findOrFail($this->modelId);
+        $model = $this->loadModel();
         $this->translations = [];
 
         foreach (SetLocale::SUPPORTED_LOCALES as $locale) {
@@ -126,6 +138,7 @@ class TranslationBadges extends Component
         $this->showEditor = ! $this->showEditor;
 
         if ($this->showEditor) {
+            $this->cachedModel = null;
             $this->initTranslations();
         }
 
@@ -136,7 +149,7 @@ class TranslationBadges extends Component
     {
         abort_unless(in_array($this->modelClass, self::ALLOWED_MODELS, true), 403);
 
-        $model = $this->modelClass::findOrFail($this->modelId);
+        $model = $this->loadModel();
         $validatedKeys = $model->translations_validated ?? [];
 
         foreach ($this->translations as $locale => $fields) {
@@ -188,8 +201,7 @@ class TranslationBadges extends Component
     /** Reference (FR) value for a field. */
     public function frValue(string $field): string
     {
-        return $this->modelClass::findOrFail($this->modelId)
-            ->getTranslation($field, 'fr', false);
+        return $this->loadModel()->getTranslation($field, 'fr', false);
     }
 
     public function render(): View

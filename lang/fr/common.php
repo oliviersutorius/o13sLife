@@ -34,4 +34,5 @@ return [
     'sauvegarde_en_cours' => 'Sauvegarde…',
     'traductions_sauvegardees' => 'Traductions sauvegardées et validées.',
     'annuler' => 'Annuler',
+    'champ_en_locale' => ':champ en :locale',
 ];

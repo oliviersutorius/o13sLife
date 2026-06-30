@@ -100,7 +100,7 @@
                                     wire:model="translations.{{ $locale }}.{{ $field }}"
                                     rows="3"
                                     class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                    aria-label="{{ $this->labelFor($field) }} en {{ strtoupper($locale) }}"
+                                    aria-label="{{ __('common.champ_en_locale', ['champ' => $this->labelFor($field), 'locale' => strtoupper($locale)]) }}"
                                 ></textarea>
                             @else
                                 <input
@@ -108,7 +108,7 @@
                                     id="translation-{{ $locale }}-{{ $field }}"
                                     wire:model="translations.{{ $locale }}.{{ $field }}"
                                     class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                    aria-label="{{ $this->labelFor($field) }} en {{ strtoupper($locale) }}"
+                                    aria-label="{{ __('common.champ_en_locale', ['champ' => $this->labelFor($field), 'locale' => strtoupper($locale)]) }}"
                                 >
                             @endif
                         </div>
