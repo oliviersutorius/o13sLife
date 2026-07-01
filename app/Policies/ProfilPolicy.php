@@ -7,6 +7,9 @@ namespace App\Policies;
 use App\Models\Profil;
 use App\Models\User;
 
+// Le Profil est unique et géré exclusivement via les composants Livewire d'administration.
+// Cette policy bloque toute action via les gates Laravel standard — le contrôle d'accès
+// est assuré par le middleware 'auth' sur les routes /admin/*.
 class ProfilPolicy
 {
     /**

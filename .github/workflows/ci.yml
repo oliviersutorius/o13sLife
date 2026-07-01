@@ -107,9 +107,6 @@ jobs:
       - name: Installer Playwright
         run: npx playwright install --with-deps chromium
 
-      - name: Démarrer le serveur
-        run: php artisan serve --port=8000 &
-
       - name: Lancer les tests Playwright
         run: npx playwright test
 
@@ -161,10 +158,12 @@ jobs:
         uses: grafana/setup-k6-action@v1
 
       - name: Démarrer le serveur
-        run: php artisan serve --port=8000 &
+        run: |
+          php artisan serve --port=8000 &
+          timeout 10 bash -c 'until curl -s http://localhost:8000 > /dev/null; do sleep 1; done'
 
       - name: Lancer les tests de charge
-        run: k6 run tests/performance/load.js
+        run: k6 run -e BASE_URL=http://localhost:8000 tests/performance/load.js
 
   # ─── Audit de sécurité ──────────────────────────────────────────────────────
   security:

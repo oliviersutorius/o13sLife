@@ -12,6 +12,12 @@ export default defineConfig({
         baseURL: 'http://localhost:8000',
         trace: 'on-first-retry',
     },
+    webServer: {
+        command: 'php artisan serve --port=8000',
+        url: 'http://localhost:8000',
+        reuseExistingServer: !process.env.CI,
+        timeout: 10000,
+    },
     projects: [
         {
             name: 'chromium',

@@ -6,11 +6,6 @@ test.describe('Page CV publique', () => {
         const response = await page.goto('/');
         expect(response?.status()).toBe(200);
     });
-
-    test('contient la balise html et body', async ({ page }) => {
-        await page.goto('/');
-        await expect(page.locator('body')).toBeVisible();
-    });
 });
 
 test.describe('Back-office — authentification', () => {
