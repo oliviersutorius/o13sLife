@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Livewire\Admin\ProfilForm;
 use App\Models\Profil;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -118,4 +120,39 @@ it('affiche le badge publié quand le profil est publié', function () {
     Livewire::actingAs($this->admin)
         ->test(ProfilForm::class)
         ->assertSee(__('profil.statut_publie'));
+});
+
+it('sauvegarde un profil avec une photo uploadée via sauvegarder()', function () {
+    Storage::fake('public');
+
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Dev Senior')
+        ->set('email', 'dev@example.com')
+        ->set('photo', UploadedFile::fake()->image('avatar.jpg'))
+        ->call('sauvegarder')
+        ->assertHasNoErrors()
+        ->assertSet('successMessage', __('profil.sauvegarde_ok'));
+
+    $profil = Profil::first();
+    expect($profil)->not->toBeNull()
+        ->and($profil->photo)->not->toBeNull();
+});
+
+it('publie un profil avec une photo uploadée via publier()', function () {
+    Storage::fake('public');
+
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Architecte')
+        ->set('email', 'archi@example.com')
+        ->set('photo', UploadedFile::fake()->image('photo.png'))
+        ->call('publier')
+        ->assertHasNoErrors()
+        ->assertSet('successMessage', __('profil.publication_ok'))
+        ->assertSet('is_published', true);
+
+    $profil = Profil::first();
+    expect($profil->photo)->not->toBeNull()
+        ->and($profil->is_published)->toBeTrue();
 });

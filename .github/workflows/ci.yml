@@ -107,9 +107,6 @@ jobs:
       - name: Installer Playwright
         run: npx playwright install --with-deps chromium
 
-      - name: Démarrer le serveur
-        run: php artisan serve --port=8000 &
-
       - name: Lancer les tests Playwright
         run: npx playwright test
 
@@ -135,8 +132,17 @@ jobs:
           extensions: sqlite3, pdo_sqlite
           tools: composer
 
-      - name: Installer les dépendances
+      - name: Installer les dépendances PHP
         run: composer install --no-interaction --prefer-dist
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances Node
+        run: npm ci
 
       - name: Préparer l'environnement
         run: |
@@ -152,10 +158,12 @@ jobs:
         uses: grafana/setup-k6-action@v1
 
       - name: Démarrer le serveur
-        run: php artisan serve --port=8000 &
+        run: |
+          php artisan serve --port=8000 &
+          timeout 10 bash -c 'until curl -s http://localhost:8000 > /dev/null; do sleep 1; done'
 
       - name: Lancer les tests de charge
-        run: k6 run tests/performance/load.js
+        run: k6 run -e BASE_URL=http://localhost:8000 tests/performance/load.js
 
   # ─── Audit de sécurité ──────────────────────────────────────────────────────
   security:
