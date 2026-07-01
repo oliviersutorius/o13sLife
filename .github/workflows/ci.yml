@@ -135,8 +135,17 @@ jobs:
           extensions: sqlite3, pdo_sqlite
           tools: composer
 
-      - name: Installer les dépendances
+      - name: Installer les dépendances PHP
         run: composer install --no-interaction --prefer-dist
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances Node
+        run: npm ci
 
       - name: Préparer l'environnement
         run: |
