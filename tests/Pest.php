@@ -5,6 +5,9 @@ declare(strict_types=1);
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+// Stubs pour le package anthropic-php/laravel (non installé en dépendances dev).
+require_once __DIR__.'/Stubs/anthropic_stubs.php';
+
 /*
 |--------------------------------------------------------------------------
 | Test Case

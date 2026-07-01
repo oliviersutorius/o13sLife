@@ -194,3 +194,40 @@ it('sauvegarderTraductions refuse un modelClass non autorisé avec 403', functio
     $component->modelClass = User::class;
     $component->sauvegarderTraductions();
 })->throws(HttpException::class);
+
+it('labelFor retourne un libellé lisible pour un nom de champ', function () {
+    $experience = Experience::factory()->create();
+
+    $component = new TranslationBadges;
+    $component->mount(Experience::class, $experience->id, ['titre_poste']);
+
+    expect($component->labelFor('titre_poste'))->toBe('Titre Poste');
+});
+
+it('frValue retourne la valeur FR du champ', function () {
+    $profil = Profil::factory()->create(['email' => 'test@example.com']);
+    DB::table('profils')->where('id', $profil->id)->update([
+        'titre' => json_encode(['fr' => 'Développeur', 'en' => 'Developer']),
+    ]);
+
+    $component = new TranslationBadges;
+    $component->mount(Profil::class, $profil->id, ['titre']);
+
+    expect($component->frValue('titre'))->toBe('Développeur');
+});
+
+it('la locale de apparaît avec statut missing quand aucune traduction DE n\'existe', function () {
+    $profil = Profil::factory()->create(['email' => 'test@example.com']);
+    DB::table('profils')->where('id', $profil->id)->update([
+        'titre' => json_encode(['fr' => 'Développeur', 'en' => 'Developer', 'it' => 'Sviluppatore', 'es' => 'Desarrollador']),
+    ]);
+
+    $component = Livewire::test(TranslationBadges::class, [
+        'modelClass' => Profil::class,
+        'modelId' => $profil->id,
+        'fields' => ['titre'],
+    ]);
+
+    $status = $component->get('translationStatus');
+    expect($status['de'])->toBe('missing');
+});
