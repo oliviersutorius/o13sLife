@@ -28,13 +28,6 @@ class TranslationBadges extends Component
         CentreInteret::class,
     ];
 
-    public const LOCALE_FLAGS = [
-        'fr' => '🇫🇷',
-        'en' => '🇬🇧',
-        'it' => '🇮🇹',
-        'es' => '🇪🇸',
-    ];
-
     /** Translation status is 'validated', 'auto', or 'missing' per locale. */
     private const STATUS_VALIDATED = 'validated';
 
@@ -216,6 +209,8 @@ class TranslationBadges extends Component
 
     public function render(): View
     {
-        return view('livewire.admin.translation-badges');
+        return view('livewire.admin.translation-badges', [
+            'localeFlags' => array_map(fn ($l) => $l['flag'], SetLocale::LOCALES),
+        ]);
     }
 }

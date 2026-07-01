@@ -6,16 +6,10 @@ namespace App\Services;
 
 use Anthropic\Exceptions\ErrorException;
 use Anthropic\Laravel\Facades\Anthropic;
+use App\Http\Middleware\SetLocale;
 
 class TranslationService
 {
-    private const LOCALE_NAMES = [
-        'fr' => 'French',
-        'en' => 'English',
-        'it' => 'Italian',
-        'es' => 'Spanish',
-    ];
-
     /**
      * Translate a text from one locale to another using Claude Haiku.
      *
@@ -23,8 +17,8 @@ class TranslationService
      */
     public function translate(string $text, string $sourceLocale, string $targetLocale): string
     {
-        $sourceName = self::LOCALE_NAMES[$sourceLocale] ?? $sourceLocale;
-        $targetName = self::LOCALE_NAMES[$targetLocale] ?? $targetLocale;
+        $sourceName = SetLocale::LOCALES[$sourceLocale]['name'] ?? $sourceLocale;
+        $targetName = SetLocale::LOCALES[$targetLocale]['name'] ?? $targetLocale;
 
         $response = Anthropic::messages()->create([
             'model' => 'claude-haiku-4-5-20251001',

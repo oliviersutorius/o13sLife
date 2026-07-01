@@ -18,7 +18,7 @@ class TranslateContentJob implements ShouldQueue
         public readonly string $modelClass,
         public readonly int $modelId,
         public readonly array $fields,
-        public readonly array $targetLocales = ['en', 'it', 'es'],
+        public readonly array $targetLocales = ['en', 'it', 'es', 'de'],
     ) {}
 
     public function handle(TranslationService $service): void

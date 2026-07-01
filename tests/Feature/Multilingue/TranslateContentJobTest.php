@@ -15,8 +15,8 @@ it('traduit les champs du modèle dans les locales cibles', function () {
 
     $service = Mockery::mock(TranslationService::class);
     $service->shouldReceive('translate')
-        ->times(3)
-        ->andReturnValues(['Developer', 'Sviluppatore', 'Desarrollador']);
+        ->times(4)
+        ->andReturnValues(['Developer', 'Sviluppatore', 'Desarrollador', 'Entwickler']);
 
     $job = new TranslateContentJob(Experience::class, $experience->id, ['titre_poste']);
     $job->handle($service);
@@ -24,7 +24,8 @@ it('traduit les champs du modèle dans les locales cibles', function () {
     $experience->refresh();
     expect($experience->getTranslation('titre_poste', 'en', false))->toBe('Developer')
         ->and($experience->getTranslation('titre_poste', 'it', false))->toBe('Sviluppatore')
-        ->and($experience->getTranslation('titre_poste', 'es', false))->toBe('Desarrollador');
+        ->and($experience->getTranslation('titre_poste', 'es', false))->toBe('Desarrollador')
+        ->and($experience->getTranslation('titre_poste', 'de', false))->toBe('Entwickler');
 });
 
 it('ignore les champs vides et ne traduit pas', function () {
@@ -50,6 +51,7 @@ it('continue les autres traductions si une échoue', function () {
     $service->shouldReceive('translate')->with('Développeur', 'fr', 'en')->andThrow(new RuntimeException('API error'));
     $service->shouldReceive('translate')->with('Développeur', 'fr', 'it')->andReturn('Sviluppatore');
     $service->shouldReceive('translate')->with('Développeur', 'fr', 'es')->andReturn('Desarrollador');
+    $service->shouldReceive('translate')->with('Développeur', 'fr', 'de')->andReturn('Entwickler');
 
     $job = new TranslateContentJob(Experience::class, $experience->id, ['titre_poste']);
     $job->handle($service);
@@ -57,7 +59,8 @@ it('continue les autres traductions si une échoue', function () {
     $experience->refresh();
     expect($experience->getTranslation('titre_poste', 'en', false))->toBe('')
         ->and($experience->getTranslation('titre_poste', 'it', false))->toBe('Sviluppatore')
-        ->and($experience->getTranslation('titre_poste', 'es', false))->toBe('Desarrollador');
+        ->and($experience->getTranslation('titre_poste', 'es', false))->toBe('Desarrollador')
+        ->and($experience->getTranslation('titre_poste', 'de', false))->toBe('Entwickler');
 });
 
 it('accepte des locales cibles personnalisées', function () {
