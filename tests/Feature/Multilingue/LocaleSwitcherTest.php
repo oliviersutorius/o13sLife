@@ -35,6 +35,13 @@ it('ignore une locale non supportée', function () {
         ->assertSet('currentLocale', 'fr');
 });
 
+it('accepte la nouvelle locale DE', function () {
+    Livewire::test(LocaleSwitcher::class)
+        ->call('switchLocale', 'de')
+        ->assertSet('currentLocale', 'de')
+        ->assertDispatched('locale-changed', locale: 'de');
+});
+
 it('dispatche l\'événement locale-changed lors du changement', function () {
     Livewire::test(LocaleSwitcher::class)
         ->call('switchLocale', 'it')

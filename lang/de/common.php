@@ -7,8 +7,8 @@ return [
     'traductions' => 'Übersetzungen',
 
     // Übersetzungsstatus
-    'traduit_en' => 'Übersetzt auf :locale',
-    'non_traduit_en' => 'Nicht übersetzt auf :locale',
+    'traduit_en' => 'In :locale übersetzt',
+    'non_traduit_en' => 'Nicht in :locale übersetzt',
     'statut_valide' => 'Validiert auf :locale',
     'statut_auto' => 'Automatisch übersetzt auf :locale (nicht geprüft)',
     'disponible' => 'verfügbar',

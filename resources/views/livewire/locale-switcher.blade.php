@@ -5,7 +5,7 @@
     role="navigation"
     aria-label="Sélecteur de langue"
 >
-    @foreach(\App\Livewire\LocaleSwitcher::LOCALES as $code => $info)
+    @foreach($locales as $code => $info)
         <button
             type="button"
             wire:click="switchLocale('{{ $code }}')"

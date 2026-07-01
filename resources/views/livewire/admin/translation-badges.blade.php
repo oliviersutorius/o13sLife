@@ -7,7 +7,7 @@
         @endif
 
         <div class="flex items-center gap-1" aria-label="{{ __('common.langues_disponibles') }}">
-            @foreach(\App\Livewire\Admin\TranslationBadges::LOCALE_FLAGS as $locale => $flag)
+            @foreach($localeFlags as $locale => $flag)
                 @php $status = $translationStatus[$locale] ?? 'missing'; @endphp
                 <span
                     class="inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium
@@ -70,7 +70,7 @@
 
         {{-- Champs par locale --}}
         <div class="space-y-4">
-            @foreach(\App\Livewire\Admin\TranslationBadges::LOCALE_FLAGS as $locale => $flag)
+            @foreach($localeFlags as $locale => $flag)
                 @if($locale === 'fr') @continue @endif
                 @php $status = $translationStatus[$locale] ?? 'missing'; @endphp
                 <div class="rounded-md bg-white p-3 ring-1 ring-gray-200">

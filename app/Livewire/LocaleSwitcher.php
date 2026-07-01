@@ -12,14 +12,6 @@ class LocaleSwitcher extends Component
 {
     public string $currentLocale;
 
-    public const LOCALES = [
-        'fr' => ['label' => 'Français', 'flag' => '🇫🇷'],
-        'en' => ['label' => 'English', 'flag' => '🇬🇧'],
-        'it' => ['label' => 'Italiano', 'flag' => '🇮🇹'],
-        'es' => ['label' => 'Español', 'flag' => '🇪🇸'],
-        'de' => ['label' => 'Deutsch', 'flag' => '🇩🇪'],
-    ];
-
     public function mount(): void
     {
         $this->currentLocale = app()->getLocale();
@@ -39,6 +31,8 @@ class LocaleSwitcher extends Component
 
     public function render(): View
     {
-        return view('livewire.locale-switcher');
+        return view('livewire.locale-switcher', [
+            'locales' => SetLocale::LOCALES,
+        ]);
     }
 }
