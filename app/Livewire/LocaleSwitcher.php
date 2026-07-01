@@ -17,6 +17,7 @@ class LocaleSwitcher extends Component
         'en' => ['label' => 'English', 'flag' => '🇬🇧'],
         'it' => ['label' => 'Italiano', 'flag' => '🇮🇹'],
         'es' => ['label' => 'Español', 'flag' => '🇪🇸'],
+        'de' => ['label' => 'Deutsch', 'flag' => '🇩🇪'],
     ];
 
     public function mount(): void

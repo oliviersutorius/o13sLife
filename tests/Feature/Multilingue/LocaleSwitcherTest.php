@@ -5,12 +5,13 @@ declare(strict_types=1);
 use App\Livewire\LocaleSwitcher;
 use Livewire\Livewire;
 
-it('affiche les 4 drapeaux de langue', function () {
+it('affiche les 5 drapeaux de langue', function () {
     Livewire::test(LocaleSwitcher::class)
         ->assertSee('🇫🇷')
         ->assertSee('🇬🇧')
         ->assertSee('🇮🇹')
-        ->assertSee('🇪🇸');
+        ->assertSee('🇪🇸')
+        ->assertSee('🇩🇪');
 });
 
 it('démarre avec la locale de l\'application', function () {
@@ -30,7 +31,7 @@ it('ignore une locale non supportée', function () {
     app()->setLocale('fr');
 
     Livewire::test(LocaleSwitcher::class)
-        ->call('switchLocale', 'de')
+        ->call('switchLocale', 'zh')
         ->assertSet('currentLocale', 'fr');
 });
 

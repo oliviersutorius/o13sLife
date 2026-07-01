@@ -14,6 +14,7 @@ class TranslationService
         'en' => 'English',
         'it' => 'Italian',
         'es' => 'Spanish',
+        'de' => 'German',
     ];
 
     /**

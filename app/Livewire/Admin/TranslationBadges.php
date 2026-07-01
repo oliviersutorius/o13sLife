@@ -33,6 +33,7 @@ class TranslationBadges extends Component
         'en' => '🇬🇧',
         'it' => '🇮🇹',
         'es' => '🇪🇸',
+        'de' => '🇩🇪',
     ];
 
     /** Translation status is 'validated', 'auto', or 'missing' per locale. */
