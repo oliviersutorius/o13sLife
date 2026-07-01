@@ -15,7 +15,7 @@ test.describe('Page CV publique', () => {
 
 test.describe('Back-office — authentification', () => {
     test('redirige vers le login si non connecté', async ({ page }) => {
-        await page.goto('/admin/dashboard');
+        await page.goto('/admin');
         await expect(page).toHaveURL(/\/admin\/login/);
     });
 
