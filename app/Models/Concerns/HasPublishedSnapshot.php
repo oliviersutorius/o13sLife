@@ -29,20 +29,27 @@ trait HasPublishedSnapshot
 
     public function unpublish(): void
     {
-        $this->update(['is_published' => false]);
+        $this->is_published = false;
+        $this->save();
     }
 
     /**
-     * Remplace les attributs courants par ceux figés lors de la dernière
-     * publication, pour un affichage front fidèle à l'état publié.
+     * Retourne une instance (clonée, jamais l'original) dont les attributs
+     * sont ceux figés lors de la dernière publication, pour un affichage
+     * front fidèle à l'état publié. Cette instance clonée ne doit jamais
+     * être sauvegardée : ce n'est qu'une projection en lecture pour l'affichage,
+     * pas le contenu brouillon réel du modèle.
      */
     public function withPublishedContent(): static
     {
-        if (! empty($this->published_snapshot)) {
-            $this->setRawAttributes(array_merge($this->getAttributes(), $this->published_snapshot), true);
+        if (empty($this->published_snapshot)) {
+            return $this;
         }
 
-        return $this;
+        $clone = clone $this;
+        $clone->setRawAttributes(array_merge($clone->getAttributes(), $clone->published_snapshot), true);
+
+        return $clone;
     }
 
     protected function publishableAttributes(): array
