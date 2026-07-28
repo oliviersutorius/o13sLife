@@ -151,3 +151,15 @@ it('withPublishedContent() ne modifie rien quand published_snapshot est vide', f
 
     expect($result->{$champ})->toBe('Brouillon Jamais Publié');
 })->with('entites_publiables');
+
+it('withPublishedContent() ne modifie pas l\'instance originale (clone)', function (string $modelClass, string $champ) {
+    $item = $modelClass::factory()->create([$champ => 'Ancien']);
+    $item->publish();
+    $item->update([$champ => 'Brouillon']);
+
+    $frais = $item->fresh();
+    $clone = $frais->withPublishedContent();
+
+    expect($clone)->not->toBe($frais)
+        ->and($frais->{$champ})->toBe('Brouillon');
+})->with('entites_publiables');
