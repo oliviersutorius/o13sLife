@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Concerns\HasPublishedSnapshot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
 class Langue extends Model
 {
-    use HasFactory, HasTranslations;
+    use HasFactory, HasPublishedSnapshot, HasTranslations;
 
     public array $translatable = ['niveau'];
 
@@ -25,12 +25,8 @@ class Langue extends Model
     {
         return [
             'is_published' => 'boolean',
+            'published_snapshot' => 'array',
             'translations_validated' => 'array',
         ];
-    }
-
-    public function scopePublished(Builder $query): Builder
-    {
-        return $query->where('is_published', true);
     }
 }

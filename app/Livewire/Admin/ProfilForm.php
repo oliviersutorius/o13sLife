@@ -75,12 +75,7 @@ class ProfilForm extends Component
         $profil->lien_github = $this->lien_github ?: null;
 
         if ($this->photo) {
-            if ($profil->photo) {
-                Storage::disk('public')->delete($profil->photo);
-            }
-            $profil->photo = $this->photo->store('profil', 'public');
-            $this->photo_actuelle = $profil->photo;
-            $this->photo = null;
+            $this->remplacerPhoto($profil);
         }
 
         $profil->save();
@@ -100,21 +95,33 @@ class ProfilForm extends Component
         $profil->localisation = $this->localisation ?: null;
         $profil->lien_linkedin = $this->lien_linkedin ?: null;
         $profil->lien_github = $this->lien_github ?: null;
-        $profil->is_published = true;
 
         if ($this->photo) {
-            if ($profil->photo) {
-                Storage::disk('public')->delete($profil->photo);
-            }
-            $profil->photo = $this->photo->store('profil', 'public');
-            $this->photo_actuelle = $profil->photo;
-            $this->photo = null;
+            $this->remplacerPhoto($profil);
         }
 
-        $profil->save();
+        $profil->publish();
 
         $this->is_published = true;
         $this->successMessage = __('profil.publication_ok');
+    }
+
+    /**
+     * Ne supprime l'ancien fichier photo que s'il n'est pas celui actuellement
+     * publié (référencé par published_snapshot) : le front doit continuer à
+     * afficher la photo publiée tant qu'une nouvelle publication n'a pas eu lieu.
+     */
+    private function remplacerPhoto(Profil $profil): void
+    {
+        $photoPubliee = $profil->published_snapshot['photo'] ?? null;
+
+        if ($profil->photo && $profil->photo !== $photoPubliee) {
+            Storage::disk('public')->delete($profil->photo);
+        }
+
+        $profil->photo = $this->photo->store('profil', 'public');
+        $this->photo_actuelle = $profil->photo;
+        $this->photo = null;
     }
 
     public function render(): View

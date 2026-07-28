@@ -33,6 +33,8 @@ class LangueFactory extends Factory
 
     public function publié(): static
     {
-        return $this->state(['is_published' => true]);
+        return $this->afterCreating(function (Langue $langue) {
+            $langue->publish();
+        });
     }
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Concerns\HasPublishedSnapshot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
 class Experience extends Model
 {
-    use HasFactory, HasTranslations;
+    use HasFactory, HasPublishedSnapshot, HasTranslations;
 
     public array $translatable = ['titre_poste', 'description'];
 
@@ -32,17 +32,8 @@ class Experience extends Model
             'date_fin' => 'date',
             'technologies' => 'array',
             'is_published' => 'boolean',
+            'published_snapshot' => 'array',
             'translations_validated' => 'array',
         ];
-    }
-
-    public function scopePublished(Builder $query): Builder
-    {
-        return $query->where('is_published', true);
-    }
-
-    public function scopeOrdered(Builder $query): Builder
-    {
-        return $query->orderBy('date_debut', 'desc');
     }
 }

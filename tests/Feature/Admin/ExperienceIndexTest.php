@@ -156,6 +156,16 @@ it('publie une expérience et affiche le message de succès', function () {
     expect($experience->fresh()->is_published)->toBeTrue();
 });
 
+it('togglePublication fige published_snapshot lors de la publication', function () {
+    $experience = Experience::factory()->create(['titre_poste' => 'Dev Backend']);
+
+    Livewire::actingAs($this->admin)
+        ->test(Index::class)
+        ->call('togglePublication', $experience->id);
+
+    expect($experience->fresh()->withPublishedContent()->titre_poste)->toBe('Dev Backend');
+});
+
 it('dépublie une expérience et affiche le message de succès', function () {
     $experience = Experience::factory()->publié()->create();
 
