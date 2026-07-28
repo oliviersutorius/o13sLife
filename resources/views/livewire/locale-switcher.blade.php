@@ -14,10 +14,11 @@
                 {{ $currentLocale === $code
                     ? 'bg-white/20 font-semibold text-white ring-1 ring-white/40'
                     : 'text-white/70 hover:bg-white/10 hover:text-white' }}"
+            title="{{ $info['label'] }}"
             aria-label="{{ $info['label'] }}"
             @if($currentLocale === $code) aria-current="true" @endif
         >
-            <img src="{{ asset('images/flags/' . $info['flag'] . '.svg') }}" alt="" class="h-3 w-4 rounded-sm object-cover" aria-hidden="true" />
+            <img src="{{ asset('images/flags/' . $info['flag'] . '.svg') }}" alt="" class="h-3 w-4 rounded-sm object-cover" />
         </button>
     @endforeach
 </div>

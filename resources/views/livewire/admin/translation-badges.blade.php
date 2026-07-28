@@ -18,7 +18,7 @@
                     title="@if($status === 'validated'){{ __('common.statut_valide', ['locale' => strtoupper($locale)]) }}@elseif($status === 'auto'){{ __('common.statut_auto', ['locale' => strtoupper($locale)]) }}@else{{ __('common.non_traduit_en', ['locale' => strtoupper($locale)]) }}@endif"
                     aria-label="{{ strtoupper($locale) }} : @if($status === 'validated'){{ __('common.valide') }}@elseif($status === 'auto'){{ __('common.auto') }}@else{{ __('common.manquant') }}@endif"
                 >
-                    <img src="{{ asset('images/flags/' . $flag . '.svg') }}" alt="" class="inline h-2.5 w-3.5 rounded-sm object-cover align-middle" aria-hidden="true" />
+                    <img src="{{ asset('images/flags/' . $flag . '.svg') }}" alt="" class="inline h-3 w-4 rounded-sm object-cover align-middle" />
                 </span>
             @endforeach
         </div>
@@ -60,7 +60,7 @@
         {{-- Référence FR --}}
         <div class="mb-4 rounded-md bg-white p-3 ring-1 ring-gray-200">
             <p class="mb-2 flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                <img src="{{ asset('images/flags/fr.svg') }}" alt="" class="inline h-2.5 w-3.5 rounded-sm object-cover" aria-hidden="true" />
+                <img src="{{ asset('images/flags/fr.svg') }}" alt="" class="inline h-3 w-4 rounded-sm object-cover" />
                 {{ __('common.reference_fr') }}
             </p>
             @foreach($fields as $field)
@@ -78,7 +78,7 @@
                 @php $status = $translationStatus[$locale] ?? 'missing'; @endphp
                 <div class="rounded-md bg-white p-3 ring-1 ring-gray-200">
                     <div class="mb-2 flex items-center gap-2">
-                        <img src="{{ asset('images/flags/' . $flag . '.svg') }}" alt="" class="inline h-3 w-4 rounded-sm object-cover" aria-hidden="true" />
+                        <img src="{{ asset('images/flags/' . $flag . '.svg') }}" alt="" class="inline h-3 w-4 rounded-sm object-cover" />
                         <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">{{ strtoupper($locale) }}</span>
                         @if($status === 'validated')
                             <span class="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">{{ __('common.valide') }}</span>
