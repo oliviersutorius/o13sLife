@@ -27,10 +27,10 @@ it('affiche les badges de traduction pour un modèle autorisé', function () {
         'modelId' => $profil->id,
         'fields' => ['titre'],
     ])
-        ->assertSee('🇫🇷')
-        ->assertSee('🇬🇧')
-        ->assertSee('🇮🇹')
-        ->assertSee('🇪🇸');
+        ->assertSeeHtml('images/flags/fr.svg')
+        ->assertSeeHtml('images/flags/gb.svg')
+        ->assertSeeHtml('images/flags/it.svg')
+        ->assertSeeHtml('images/flags/es.svg');
 });
 
 it('refuse un modelClass non autorisé avec 403', function () {

@@ -17,8 +17,7 @@
             aria-label="{{ $info['label'] }}"
             @if($currentLocale === $code) aria-current="true" @endif
         >
-            <span aria-hidden="true">{{ $info['flag'] }}</span>
-            <span class="hidden sm:inline">{{ $code }}</span>
+            <img src="{{ asset('images/flags/' . $info['flag'] . '.svg') }}" alt="" class="h-3 w-4 rounded-sm object-cover" aria-hidden="true" />
         </button>
     @endforeach
 </div>
