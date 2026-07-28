@@ -43,6 +43,8 @@ class FormationFactory extends Factory
 
     public function publié(): static
     {
-        return $this->state(['is_published' => true]);
+        return $this->afterCreating(function (Formation $formation) {
+            $formation->publish();
+        });
     }
 }

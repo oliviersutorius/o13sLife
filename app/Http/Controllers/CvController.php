@@ -15,14 +15,26 @@ class CvController extends Controller
 {
     public function index()
     {
-        $profil = Profil::where('is_published', true)->first();
+        $profil = Profil::published()->first()?->withPublishedContent();
 
-        $experiences = Experience::published()->ordered()->get();
-        $formations = Formation::published()->orderBy('annee', 'desc')->get();
-        $competences = Competence::published()->orderBy('categorie')->orderBy('nom')->get()
+        $experiences = Experience::published()->get()
+            ->each->withPublishedContent()
+            ->sortByDesc('date_debut')
+            ->values();
+
+        $formations = Formation::published()->get()
+            ->each->withPublishedContent()
+            ->sortByDesc('annee')
+            ->values();
+
+        $competences = Competence::published()->get()
+            ->each->withPublishedContent()
+            ->sortBy([['categorie', 'asc'], ['nom', 'asc']])
+            ->values()
             ->groupBy('categorie');
-        $langues = Langue::published()->get();
-        $centresInteret = CentreInteret::published()->get();
+
+        $langues = Langue::published()->get()->each->withPublishedContent();
+        $centresInteret = CentreInteret::published()->get()->each->withPublishedContent();
 
         return view('cv', compact(
             'profil',

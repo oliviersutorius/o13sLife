@@ -34,6 +34,21 @@ it('masque un profil non publié', function () {
     $this->get('/')->assertDontSee('Titre confidentiel');
 });
 
+it('ne montre pas la modification d\'un profil déjà publié tant qu\'il n\'est pas republié', function () {
+    $profil = Profil::create([
+        'titre' => 'Titre Publié',
+        'email' => 'test@example.com',
+    ]);
+    $profil->publish();
+
+    $profil->update(['titre' => 'Nouveau Titre Brouillon']);
+
+    $response = $this->get('/');
+
+    $response->assertSee('Titre Publié');
+    $response->assertDontSee('Nouveau Titre Brouillon');
+});
+
 it('affiche les expériences publiées triées par date décroissante', function () {
     Experience::create([
         'titre_poste' => 'Poste Ancien',
@@ -75,6 +90,33 @@ it('masque la rubrique expériences si vide', function () {
     $this->get('/')->assertDontSee(__('cv.experiences'));
 });
 
+it('ne montre pas la modification d\'une expérience déjà publiée tant qu\'elle n\'est pas republiée', function () {
+    $experience = Experience::factory()->create(['titre_poste' => 'Titre Publié']);
+    $experience->publish();
+
+    // Simule une modification de contenu via le back-office (sauvegarder()),
+    // sans republier : is_published reste true mais le snapshot ne bouge pas.
+    $experience->update(['titre_poste' => 'Nouveau Titre Brouillon']);
+
+    $response = $this->get('/');
+
+    $response->assertSee('Titre Publié');
+    $response->assertDontSee('Nouveau Titre Brouillon');
+});
+
+it('montre le nouveau contenu d\'une expérience après republication', function () {
+    $experience = Experience::factory()->create(['titre_poste' => 'Titre Publié']);
+    $experience->publish();
+
+    $experience->update(['titre_poste' => 'Nouveau Titre Brouillon']);
+    $experience->publish();
+
+    $response = $this->get('/');
+
+    $response->assertSee('Nouveau Titre Brouillon');
+    $response->assertDontSee('Titre Publié');
+});
+
 it('affiche les formations publiées', function () {
     Formation::create([
         'ecole' => 'Université Test',
@@ -88,6 +130,22 @@ it('affiche les formations publiées', function () {
 
 it('masque la rubrique formations si vide', function () {
     $this->get('/')->assertDontSee(__('cv.formations'));
+});
+
+it('ne montre pas la modification d\'une formation déjà publiée tant qu\'elle n\'est pas republiée', function () {
+    $formation = Formation::create([
+        'ecole' => 'Université Test',
+        'annee' => 2020,
+        'diplome' => 'Master Publié',
+    ]);
+    $formation->publish();
+
+    $formation->update(['diplome' => 'Master Brouillon']);
+
+    $response = $this->get('/');
+
+    $response->assertSee('Master Publié');
+    $response->assertDontSee('Master Brouillon');
 });
 
 it('affiche les compétences publiées groupées par catégorie', function () {

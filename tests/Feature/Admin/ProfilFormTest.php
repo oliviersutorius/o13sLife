@@ -65,6 +65,34 @@ it('publie le profil et le rend visible', function () {
     expect(Profil::first()->is_published)->toBeTrue();
 });
 
+it('publier() fige published_snapshot avec le contenu courant', function () {
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Architecte Logiciel')
+        ->set('email', 'archi@example.com')
+        ->call('publier');
+
+    expect(Profil::first()->withPublishedContent()->titre)->toBe('Architecte Logiciel');
+});
+
+it('sauvegarder() après publier() ne modifie pas published_snapshot', function () {
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Titre Publié')
+        ->set('email', 'archi@example.com')
+        ->call('publier');
+
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Nouveau Titre Brouillon')
+        ->set('email', 'archi@example.com')
+        ->call('sauvegarder');
+
+    $profil = Profil::first();
+    expect($profil->titre)->toBe('Nouveau Titre Brouillon')
+        ->and($profil->withPublishedContent()->titre)->toBe('Titre Publié');
+});
+
 it('refuse un titre vide', function () {
     Livewire::actingAs($this->admin)
         ->test(ProfilForm::class)
@@ -137,6 +165,29 @@ it('sauvegarde un profil avec une photo uploadée via sauvegarder()', function (
     $profil = Profil::first();
     expect($profil)->not->toBeNull()
         ->and($profil->photo)->not->toBeNull();
+});
+
+it('ne supprime pas le fichier de la photo encore publiée lors d\'un nouvel upload en brouillon', function () {
+    Storage::fake('public');
+
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Dev Senior')
+        ->set('email', 'dev@example.com')
+        ->set('photo', UploadedFile::fake()->image('publiee.jpg'))
+        ->call('publier');
+
+    $photoPubliee = Profil::first()->photo;
+    Storage::disk('public')->assertExists($photoPubliee);
+
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Dev Senior')
+        ->set('email', 'dev@example.com')
+        ->set('photo', UploadedFile::fake()->image('brouillon.jpg'))
+        ->call('sauvegarder');
+
+    Storage::disk('public')->assertExists($photoPubliee);
 });
 
 it('publie un profil avec une photo uploadée via publier()', function () {

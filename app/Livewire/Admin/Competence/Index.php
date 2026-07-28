@@ -76,7 +76,13 @@ class Index extends Component
     public function togglePublication(int $id): void
     {
         $item = Competence::findOrFail($id);
-        $item->update(['is_published' => ! $item->is_published]);
+
+        if ($item->is_published) {
+            $item->unpublish();
+        } else {
+            $item->publish();
+        }
+
         $this->successMessage = $item->is_published
             ? __('competence.publication_ok')
             : __('competence.depublication_ok');

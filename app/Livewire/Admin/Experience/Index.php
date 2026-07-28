@@ -95,7 +95,13 @@ class Index extends Component
     public function togglePublication(int $id): void
     {
         $item = Experience::findOrFail($id);
-        $item->update(['is_published' => ! $item->is_published]);
+
+        if ($item->is_published) {
+            $item->unpublish();
+        } else {
+            $item->publish();
+        }
+
         $this->successMessage = $item->is_published
             ? __('experience.publication_ok')
             : __('experience.depublication_ok');
