@@ -7,11 +7,11 @@ use Livewire\Livewire;
 
 it('affiche les 5 drapeaux de langue', function () {
     Livewire::test(LocaleSwitcher::class)
-        ->assertSee('🇫🇷')
-        ->assertSee('🇬🇧')
-        ->assertSee('🇮🇹')
-        ->assertSee('🇪🇸')
-        ->assertSee('🇩🇪');
+        ->assertSeeHtml('images/flags/fr.svg')
+        ->assertSeeHtml('images/flags/gb.svg')
+        ->assertSeeHtml('images/flags/it.svg')
+        ->assertSeeHtml('images/flags/es.svg')
+        ->assertSeeHtml('images/flags/de.svg');
 });
 
 it('démarre avec la locale de l\'application', function () {

@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 class SetLocale
 {
     public const LOCALES = [
-        'fr' => ['label' => 'Français', 'flag' => '🇫🇷', 'name' => 'French'],
-        'en' => ['label' => 'English',  'flag' => '🇬🇧', 'name' => 'English'],
-        'it' => ['label' => 'Italiano', 'flag' => '🇮🇹', 'name' => 'Italian'],
-        'es' => ['label' => 'Español',  'flag' => '🇪🇸', 'name' => 'Spanish'],
-        'de' => ['label' => 'Deutsch',  'flag' => '🇩🇪', 'name' => 'German'],
+        'fr' => ['label' => 'Français', 'flag' => 'fr', 'name' => 'French'],
+        'en' => ['label' => 'English',  'flag' => 'gb', 'name' => 'English'],
+        'it' => ['label' => 'Italiano', 'flag' => 'it', 'name' => 'Italian'],
+        'es' => ['label' => 'Español',  'flag' => 'es', 'name' => 'Spanish'],
+        'de' => ['label' => 'Deutsch',  'flag' => 'de', 'name' => 'German'],
     ];
 
     public const SUPPORTED_LOCALES = ['fr', 'en', 'it', 'es', 'de'];
