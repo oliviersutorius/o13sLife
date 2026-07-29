@@ -63,15 +63,13 @@ class TranslationBadges extends Component
                 500,
                 'Le modèle pré-chargé passé à TranslationBadges ne correspond pas à modelClass/modelId.',
             );
+
+            $this->cachedModel = $model;
         }
 
         $this->modelClass = $modelClass;
         $this->modelId = $modelId;
         $this->fields = $fields;
-
-        if ($model !== null) {
-            $this->cachedModel = $model;
-        }
 
         $this->translationStatus = $this->computeTranslationStatus();
         $this->initTranslations();

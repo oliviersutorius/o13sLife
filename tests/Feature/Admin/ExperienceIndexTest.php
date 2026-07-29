@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\Admin\Experience\Index;
 use App\Models\Experience;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -191,4 +192,20 @@ it('affiche le badge brouillon pour une expérience non publiée', function () {
     Livewire::actingAs($this->admin)
         ->test(Index::class)
         ->assertSee(__('experience.statut_brouillon'));
+});
+
+it('ne refait pas une requête par ligne pour les badges de traduction (N+1)', function () {
+    Experience::factory()->count(5)->create();
+
+    DB::enableQueryLog();
+
+    Livewire::actingAs($this->admin)->test(Index::class);
+
+    $requetesParLigne = collect(DB::getQueryLog())->filter(
+        fn ($requete) => str_contains($requete['query'], '"experiences"."id" = ?')
+    );
+
+    DB::disableQueryLog();
+
+    expect($requetesParLigne)->toHaveCount(0);
 });
