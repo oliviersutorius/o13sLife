@@ -102,3 +102,27 @@ it('ne bloque pas un autre compte depuis la même IP', function () {
         'password' => 'password',
     ])->assertRedirect(route('admin.dashboard'));
 });
+
+it('ne peut pas être contourné en variant la casse de l\'email', function () {
+    User::factory()->create(['email' => 'admin@example.com']);
+
+    $variantesCasse = [
+        'admin@example.com',
+        'Admin@Example.com',
+        'ADMIN@EXAMPLE.COM',
+        'AdMiN@eXaMpLe.CoM',
+        'admin@Example.COM',
+    ];
+
+    foreach ($variantesCasse as $email) {
+        $this->post(route('admin.login'), [
+            'email' => $email,
+            'password' => 'mauvais-mot-de-passe',
+        ])->assertSessionHasErrors('email');
+    }
+
+    $this->post(route('admin.login'), [
+        'email' => 'Admin@Example.com',
+        'password' => 'mauvais-mot-de-passe',
+    ])->assertStatus(429);
+});
