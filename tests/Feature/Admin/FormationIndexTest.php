@@ -173,7 +173,7 @@ it('ne refait pas une requête par ligne pour les badges de traduction (N+1)', f
     Livewire::actingAs($this->admin)->test(Index::class);
 
     $requetesParLigne = collect(DB::getQueryLog())->filter(
-        fn ($requete) => str_contains($requete['query'], 'select * from "formations" where "id" = ?')
+        fn ($requete) => str_contains($requete['query'], '"formations"."id" = ?')
     );
 
     DB::disableQueryLog();

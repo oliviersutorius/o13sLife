@@ -57,6 +57,14 @@ class TranslationBadges extends Component
     {
         abort_unless(in_array($modelClass, self::ALLOWED_MODELS, true), 403);
 
+        if ($model !== null) {
+            abort_unless(
+                $model instanceof $modelClass && $model->getKey() === $modelId,
+                500,
+                'Le modèle pré-chargé passé à TranslationBadges ne correspond pas à modelClass/modelId.',
+            );
+        }
+
         $this->modelClass = $modelClass;
         $this->modelId = $modelId;
         $this->fields = $fields;
