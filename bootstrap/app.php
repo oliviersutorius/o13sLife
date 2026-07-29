@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             SetLocale::class,
         ]);
+        // Hébergement derrière le reverse proxy managé de Railway/Fly.io (cf. CLAUDE.md) :
+        // les IP des proxies ne sont pas connues à l'avance, d'où la confiance en '*'.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

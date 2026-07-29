@@ -18,7 +18,7 @@ Route::get('/', [CvController::class, 'index'])->name('cv');
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('login', [AuthController::class, 'showLogin'])->name('login');
-        Route::post('login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+        Route::post('login', [AuthController::class, 'login'])->middleware('throttle:admin-login');
     });
 
     Route::middleware('auth')->group(function () {
