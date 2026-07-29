@@ -69,3 +69,67 @@ it('empêche l\'accès au dashboard après déconnexion', function () {
     $this->get(route('admin.dashboard'))
         ->assertRedirect(route('admin.login'));
 });
+
+it('bloque après 5 tentatives échouées pour le même email', function () {
+    User::factory()->create(['email' => 'admin@example.com']);
+
+    for ($i = 0; $i < 5; $i++) {
+        $this->post(route('admin.login'), [
+            'email' => 'admin@example.com',
+            'password' => 'mauvais-mot-de-passe',
+        ])->assertSessionHasErrors('email');
+    }
+
+    $this->post(route('admin.login'), [
+        'email' => 'admin@example.com',
+        'password' => 'mauvais-mot-de-passe',
+    ])->assertStatus(429);
+});
+
+it('ne bloque pas un autre compte depuis la même IP', function () {
+    User::factory()->create(['email' => 'cible@example.com']);
+    User::factory()->create(['email' => 'autre@example.com']);
+
+    for ($i = 0; $i < 5; $i++) {
+        $this->post(route('admin.login'), [
+            'email' => 'cible@example.com',
+            'password' => 'mauvais-mot-de-passe',
+        ]);
+    }
+
+    $this->post(route('admin.login'), [
+        'email' => 'autre@example.com',
+        'password' => 'password',
+    ])->assertRedirect(route('admin.dashboard'));
+});
+
+it('ne peut pas être contourné en variant la casse de l\'email', function () {
+    User::factory()->create(['email' => 'admin@example.com']);
+
+    $variantesCasse = [
+        'admin@example.com',
+        'Admin@Example.com',
+        'ADMIN@EXAMPLE.COM',
+        'AdMiN@eXaMpLe.CoM',
+        'admin@Example.COM',
+    ];
+
+    foreach ($variantesCasse as $email) {
+        $this->post(route('admin.login'), [
+            'email' => $email,
+            'password' => 'mauvais-mot-de-passe',
+        ])->assertSessionHasErrors('email');
+    }
+
+    $this->post(route('admin.login'), [
+        'email' => 'Admin@Example.com',
+        'password' => 'mauvais-mot-de-passe',
+    ])->assertStatus(429);
+});
+
+it('ne plante pas si l\'email est envoyé comme un tableau', function () {
+    $this->post(route('admin.login'), [
+        'email' => ['a', 'b'],
+        'password' => 'mauvais-mot-de-passe',
+    ])->assertSessionHasErrors('email');
+});
