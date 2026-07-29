@@ -126,3 +126,10 @@ it('ne peut pas être contourné en variant la casse de l\'email', function () {
         'password' => 'mauvais-mot-de-passe',
     ])->assertStatus(429);
 });
+
+it('ne plante pas si l\'email est envoyé comme un tableau', function () {
+    $this->post(route('admin.login'), [
+        'email' => ['a', 'b'],
+        'password' => 'mauvais-mot-de-passe',
+    ])->assertSessionHasErrors('email');
+});
