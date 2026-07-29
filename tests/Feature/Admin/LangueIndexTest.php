@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\Admin\Langue\Index;
 use App\Models\Langue;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -162,4 +163,20 @@ it('affiche le badge brouillon pour une langue non publiée', function () {
     Livewire::actingAs($this->admin)
         ->test(Index::class)
         ->assertSee(__('langue.statut_brouillon'));
+});
+
+it('ne refait pas une requête par ligne pour les badges de traduction (N+1)', function () {
+    Langue::factory()->count(5)->create();
+
+    DB::enableQueryLog();
+
+    Livewire::actingAs($this->admin)->test(Index::class);
+
+    $requetesParLigne = collect(DB::getQueryLog())->filter(
+        fn ($requete) => str_contains($requete['query'], '"langues"."id" = ?')
+    );
+
+    DB::disableQueryLog();
+
+    expect($requetesParLigne)->toHaveCount(0);
 });

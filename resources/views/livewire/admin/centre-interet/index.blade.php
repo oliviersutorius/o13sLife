@@ -95,6 +95,7 @@
                         @livewire('admin.translation-badges', [
                             'modelClass' => \App\Models\CentreInteret::class,
                             'modelId'    => $item->id,
+                            'model'      => $item,
                             'fields'     => ['libelle'],
                         ], 'ci-badges-'.$item->id)
                     </td>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\Admin\Competence\Index;
 use App\Models\Competence;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -166,4 +167,20 @@ it('affiche le badge brouillon pour une compétence non publiée', function () {
     Livewire::actingAs($this->admin)
         ->test(Index::class)
         ->assertSee(__('competence.statut_brouillon'));
+});
+
+it('ne refait pas une requête par ligne pour les badges de traduction (N+1)', function () {
+    Competence::factory()->count(5)->create();
+
+    DB::enableQueryLog();
+
+    Livewire::actingAs($this->admin)->test(Index::class);
+
+    $requetesParLigne = collect(DB::getQueryLog())->filter(
+        fn ($requete) => str_contains($requete['query'], '"competences"."id" = ?')
+    );
+
+    DB::disableQueryLog();
+
+    expect($requetesParLigne)->toHaveCount(0);
 });

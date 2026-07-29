@@ -38,6 +38,46 @@ it('refuse un modelClass non autorisé avec 403', function () {
     $component->mount(User::class, 1, ['name']);
 })->throws(HttpException::class);
 
+it('accepte un modèle pré-chargé cohérent et évite un findOrFail', function () {
+    $profil = Profil::factory()->create(['email' => 'test@example.com']);
+    DB::table('profils')->where('id', $profil->id)->update([
+        'titre' => json_encode(['fr' => 'Développeur']),
+    ]);
+
+    DB::enableQueryLog();
+
+    Livewire::test(TranslationBadges::class, [
+        'modelClass' => Profil::class,
+        'modelId' => $profil->id,
+        'model' => $profil,
+        'fields' => ['titre'],
+    ]);
+
+    $requetesParId = collect(DB::getQueryLog())->filter(
+        fn ($requete) => str_contains($requete['query'], '"profils"."id" = ?')
+    );
+
+    DB::disableQueryLog();
+
+    expect($requetesParId)->toHaveCount(0);
+});
+
+it('refuse un modèle pré-chargé dont la classe ne correspond pas à modelClass', function () {
+    $profil = Profil::factory()->create(['email' => 'test@example.com']);
+    $experience = Experience::factory()->create();
+
+    $component = new TranslationBadges;
+    $component->mount(Profil::class, $profil->id, ['titre'], $experience);
+})->throws(HttpException::class);
+
+it('refuse un modèle pré-chargé dont l\'id ne correspond pas à modelId', function () {
+    $profil = Profil::factory()->create(['email' => 'test@example.com']);
+    $autreProfil = Profil::factory()->create(['email' => 'autre@example.com']);
+
+    $component = new TranslationBadges;
+    $component->mount(Profil::class, $profil->id, ['titre'], $autreProfil);
+})->throws(HttpException::class);
+
 it('initialise translationStatus depuis mount avec les bons statuts', function () {
     $profil = Profil::factory()->create(['email' => 'test@example.com']);
     DB::table('profils')->where('id', $profil->id)->update([

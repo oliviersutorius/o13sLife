@@ -188,6 +188,7 @@
                         @livewire('admin.translation-badges', [
                             'modelClass' => \App\Models\Experience::class,
                             'modelId'    => $item->id,
+                            'model'      => $item,
                             'fields'     => ['titre_poste', 'description'],
                         ], 'exp-badges-'.$item->id)
                     </td>
