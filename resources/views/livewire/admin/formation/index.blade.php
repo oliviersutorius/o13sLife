@@ -137,6 +137,7 @@
                         @livewire('admin.translation-badges', [
                             'modelClass' => \App\Models\Formation::class,
                             'modelId'    => $item->id,
+                            'model'      => $item,
                             'fields'     => ['diplome'],
                         ], 'form-badges-'.$item->id)
                     </td>

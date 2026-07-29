@@ -119,6 +119,7 @@
                         @livewire('admin.translation-badges', [
                             'modelClass' => \App\Models\Langue::class,
                             'modelId'    => $item->id,
+                            'model'      => $item,
                             'fields'     => ['niveau'],
                         ], 'lang-badges-'.$item->id)
                     </td>

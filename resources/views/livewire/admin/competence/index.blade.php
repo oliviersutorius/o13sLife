@@ -141,6 +141,7 @@
                         @livewire('admin.translation-badges', [
                             'modelClass' => \App\Models\Competence::class,
                             'modelId'    => $item->id,
+                            'model'      => $item,
                             'fields'     => ['categorie', 'nom'],
                         ], 'comp-badges-'.$item->id)
                     </td>

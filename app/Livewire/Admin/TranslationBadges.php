@@ -53,13 +53,18 @@ class TranslationBadges extends Component
 
     protected ?Model $cachedModel = null;
 
-    public function mount(string $modelClass, int $modelId, array $fields): void
+    public function mount(string $modelClass, int $modelId, array $fields, ?Model $model = null): void
     {
         abort_unless(in_array($modelClass, self::ALLOWED_MODELS, true), 403);
 
         $this->modelClass = $modelClass;
         $this->modelId = $modelId;
         $this->fields = $fields;
+
+        if ($model !== null) {
+            $this->cachedModel = $model;
+        }
+
         $this->translationStatus = $this->computeTranslationStatus();
         $this->initTranslations();
     }
