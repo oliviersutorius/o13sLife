@@ -13,12 +13,11 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL', 'admin@o13slife.local');
-
-        if (User::where('email', $email)->exists()) {
+        if (User::query()->exists()) {
             return;
         }
 
+        $email = env('ADMIN_EMAIL', 'admin@o13slife.local');
         $password = env('ADMIN_PASSWORD');
         $isGenerated = $password === null;
         $password ??= Str::password(20);
@@ -30,8 +29,12 @@ class AdminUserSeeder extends Seeder
         ]);
 
         if ($isGenerated) {
-            $this->command?->warn("Mot de passe admin généré : {$password}");
-            $this->command?->warn('Notez-le : il ne sera plus affiché.');
+            $path = storage_path('app/private/admin-generated-password.txt');
+            file_put_contents($path, $password);
+            chmod($path, 0600);
+
+            $this->command?->warn("Mot de passe admin généré et écrit dans : {$path}");
+            $this->command?->warn('Notez-le puis supprimez ce fichier.');
         }
     }
 }

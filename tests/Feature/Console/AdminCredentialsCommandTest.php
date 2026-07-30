@@ -60,3 +60,11 @@ it('échoue si aucun compte administrateur n\'existe', function () {
     $this->artisan('admin:credentials', ['--email' => 'nouveau@example.com'])
         ->assertFailed();
 });
+
+it('échoue proprement si le nouvel email est déjà utilisé par un autre compte', function () {
+    User::factory()->create(['email' => 'admin@example.com']);
+    User::factory()->create(['email' => 'dejapris@example.com']);
+
+    $this->artisan('admin:credentials', ['--email' => 'dejapris@example.com'])
+        ->assertFailed();
+});

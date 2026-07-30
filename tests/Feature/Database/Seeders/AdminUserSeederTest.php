@@ -24,6 +24,11 @@ function setAdminEnv(?string $email, ?string $password): void
 
 afterEach(function () {
     setAdminEnv(null, null);
+
+    $path = storage_path('app/private/admin-generated-password.txt');
+    if (file_exists($path)) {
+        unlink($path);
+    }
 });
 
 it('crée un admin avec l\'email et le mot de passe par défaut si aucune variable d\'env n\'est définie', function () {
@@ -60,13 +65,31 @@ it('ne recrée pas l\'admin si un compte existe déjà pour cet email', function
     expect(Hash::check('premier-mot-de-passe', $admin->password))->toBeTrue();
 });
 
-it('génère un mot de passe aléatoire si ADMIN_PASSWORD est absent', function () {
+it('ne crée pas de second admin si ADMIN_EMAIL change alors qu\'un admin existe déjà', function () {
+    setAdminEnv('premier-admin@example.com', 'premier-mot-de-passe');
+    $this->seed(AdminUserSeeder::class);
+
+    setAdminEnv('second-admin@example.com', 'second-mot-de-passe');
+    $this->seed(AdminUserSeeder::class);
+
+    expect(User::count())->toBe(1);
+    expect(User::where('email', 'second-admin@example.com')->exists())->toBeFalse();
+
+    $admin = User::first();
+    expect($admin->email)->toBe('premier-admin@example.com');
+    expect(Hash::check('premier-mot-de-passe', $admin->password))->toBeTrue();
+});
+
+it('génère un mot de passe aléatoire et l\'écrit dans un fichier privé si ADMIN_PASSWORD est absent', function () {
     setAdminEnv('genere@example.com', null);
 
     $this->seed(AdminUserSeeder::class);
 
     $admin = User::where('email', 'genere@example.com')->first();
+    $path = storage_path('app/private/admin-generated-password.txt');
 
     expect($admin)->not->toBeNull();
     expect(Hash::check('password', $admin->password))->toBeFalse();
+    expect(file_exists($path))->toBeTrue();
+    expect(Hash::check(file_get_contents($path), $admin->password))->toBeTrue();
 });

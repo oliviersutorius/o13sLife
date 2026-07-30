@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 
 #[Signature('admin:credentials {--email= : Nouvel email de connexion} {--password= : Nouveau mot de passe (8 caractères minimum)}')]
@@ -53,7 +54,13 @@ class AdminCredentialsCommand extends Command
             $admin->password = Hash::make($password);
         }
 
-        $admin->save();
+        try {
+            $admin->save();
+        } catch (QueryException $e) {
+            $this->error("Impossible d'enregistrer les nouveaux identifiants : {$e->getMessage()}");
+
+            return self::FAILURE;
+        }
 
         if ($email !== null) {
             $this->info("Email admin mis à jour : {$email}");
