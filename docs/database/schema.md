@@ -116,7 +116,7 @@ Rubrique **CentreInteret**.
 
 ### `users`
 
-Un seul enregistrement en usage normal (règle métier : accès back-office unique, pas d'inscription publique). Créé par `AdminUserSeeder` (voir [`configuration.md`](configuration.md)).
+Un seul enregistrement en usage normal (règle métier : accès back-office unique, pas d'inscription publique). Créé par `AdminUserSeeder` (voir [`configuration.md`](../configuration.md)).
 
 | Colonne | Type | Nullable | Description |
 |---|---|---|---|
