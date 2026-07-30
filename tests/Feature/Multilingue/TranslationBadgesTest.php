@@ -226,6 +226,48 @@ it('sauvegarderTraductions retire la clé validated si la valeur est vidée', fu
     expect($profil->translations_validated)->not->toContain('titre.en');
 });
 
+it('sauvegarderTraductions ignore une locale non supportée dans le payload', function () {
+    $profil = Profil::factory()->create(['email' => 'test@example.com']);
+    DB::table('profils')->where('id', $profil->id)->update([
+        'titre' => json_encode(['fr' => 'Développeur']),
+    ]);
+
+    $component = Livewire::test(TranslationBadges::class, [
+        'modelClass' => Profil::class,
+        'modelId' => $profil->id,
+        'fields' => ['titre'],
+    ]);
+
+    $component->call('toggleEditor');
+    $component->set('translations.xx.titre', 'Injection locale non supportée');
+    $component->call('sauvegarderTraductions');
+
+    $profil->refresh();
+    expect($profil->getTranslations('titre'))->not->toHaveKey('xx');
+});
+
+it('sauvegarderTraductions ignore un champ non autorisé dans le payload', function () {
+    $profil = Profil::factory()->create(['email' => 'test@example.com']);
+    DB::table('profils')->where('id', $profil->id)->update([
+        'titre' => json_encode(['fr' => 'Développeur']),
+    ]);
+
+    $component = Livewire::test(TranslationBadges::class, [
+        'modelClass' => Profil::class,
+        'modelId' => $profil->id,
+        'fields' => ['titre'],
+    ]);
+
+    $component->call('toggleEditor');
+    // 'email' n'est pas dans $fields (['titre']) ni translatable sur Profil :
+    // sans le garde-fou, setTranslation() lèverait une exception.
+    $component->set('translations.en.email', 'hacked@example.com');
+    $component->call('sauvegarderTraductions');
+
+    $profil->refresh();
+    expect($profil->email)->toBe('test@example.com');
+});
+
 it('sauvegarderTraductions refuse un modelClass non autorisé avec 403', function () {
     $profil = Profil::factory()->create(['email' => 'test@example.com']);
 
