@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * Langue maîtrisée par l'administrateur, avec niveau libre (≠ locale d'affichage de l'interface).
+ */
 class Langue extends Model
 {
     use HasFactory, HasPublishedSnapshot, HasTranslations;

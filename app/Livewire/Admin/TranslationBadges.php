@@ -17,6 +17,12 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
 
+/**
+ * Badges de statut de traduction (par locale) et éditeur de relecture manuelle
+ * pour une rubrique donnée. `modelClass` est restreint à `ALLOWED_MODELS` pour
+ * empêcher qu'un attaquant ne fasse charger/modifier un modèle arbitraire via
+ * les props publiques Livewire (ex. `User`).
+ */
 class TranslationBadges extends Component
 {
     private const ALLOWED_MODELS = [
@@ -53,6 +59,7 @@ class TranslationBadges extends Component
 
     protected ?Model $cachedModel = null;
 
+    /** @param  Model|null  $model  Instance pré-chargée optionnelle, pour éviter une requête redondante si le parent l'a déjà. */
     public function mount(string $modelClass, int $modelId, array $fields, ?Model $model = null): void
     {
         abort_unless(in_array($modelClass, self::ALLOWED_MODELS, true), 403);
@@ -139,6 +146,7 @@ class TranslationBadges extends Component
         }
     }
 
+    /** Ouvre/ferme l'éditeur de relecture manuelle des traductions. */
     public function toggleEditor(): void
     {
         $this->showEditor = ! $this->showEditor;
@@ -151,6 +159,7 @@ class TranslationBadges extends Component
         $this->successMessage = '';
     }
 
+    /** Persiste les traductions saisies manuellement et marque les champs renseignés comme validés. */
     public function sauvegarderTraductions(): void
     {
         abort_unless(in_array($this->modelClass, self::ALLOWED_MODELS, true), 403);
@@ -193,6 +202,7 @@ class TranslationBadges extends Component
         $this->successMessage = __('common.traductions_sauvegardees');
     }
 
+    /** Déclenche la traduction automatique (asynchrone, via `TranslateContentJob`). */
     public function traduire(): void
     {
         abort_unless(in_array($this->modelClass, self::ALLOWED_MODELS, true), 403);

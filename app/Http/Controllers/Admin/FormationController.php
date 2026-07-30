@@ -7,6 +7,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
+/**
+ * Vue hébergeant le composant Livewire `Formation\Index` (CRUD de la rubrique).
+ */
 class FormationController extends Controller
 {
     public function index(): View

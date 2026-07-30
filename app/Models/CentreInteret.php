@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * Centre d'intérêt personnel (mot ou courte expression).
+ */
 class CentreInteret extends Model
 {
     use HasFactory, HasPublishedSnapshot, HasTranslations;

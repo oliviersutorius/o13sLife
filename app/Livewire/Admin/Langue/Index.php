@@ -10,6 +10,10 @@ use Illuminate\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+/**
+ * CRUD back-office de la rubrique Langue : création, édition, publication/
+ * dépublication et suppression. Les nouvelles entrées sont créées en brouillon.
+ */
 class Index extends Component
 {
     public Collection $items;

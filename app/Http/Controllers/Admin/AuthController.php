@@ -10,8 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+/**
+ * Authentification du back-office (accès unique, pas d'inscription publique).
+ */
 class AuthController extends Controller
 {
+    /** Défense en profondeur : redirige un admin déjà connecté (le middleware `guest` couvre déjà ce cas sur la route). */
     public function showLogin(): View|RedirectResponse
     {
         if (Auth::check()) {

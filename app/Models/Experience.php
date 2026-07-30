@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * Poste occupé dans le parcours professionnel, affiché par date de début décroissante.
+ */
 class Experience extends Model
 {
     use HasFactory, HasPublishedSnapshot, HasTranslations;

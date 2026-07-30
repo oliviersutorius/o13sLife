@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * En-tête du CV (photo, titre, coordonnées, liens) — un seul enregistrement en usage normal.
+ */
 class Profil extends Model
 {
     use HasFactory, HasPublishedSnapshot, HasTranslations;

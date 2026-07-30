@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Traduit automatiquement, depuis le FR, les champs traduisibles d'un modèle
+ * du domaine CV vers les locales cibles (Claude Haiku via `TranslationService`).
+ * Une traduction générée automatiquement efface le flag "validée" du champ/locale
+ * concerné, pour signaler qu'elle attend une relecture manuelle.
+ */
 class TranslateContentJob implements ShouldQueue
 {
     use Queueable;
