@@ -141,7 +141,7 @@ Un message envoyé via le formulaire de contact.
 | Service | Rôle | Statut |
 |---|---|---|
 | Service email | Envoi des messages du formulaire de contact | À définir (Mailgun, Resend, SMTP…) — formulaire non implémenté |
-| API Anthropic (Claude Haiku) | Traduction automatique du contenu des rubriques (FR → EN/IT/ES/DE) | Implémenté (`App\Services\TranslationService`), mais le package `anthropic-php/laravel` n'est pas encore déclaré dans `composer.json` — voir [`configuration.md`](configuration.md) |
+| API Anthropic (Claude Haiku) | Traduction automatique du contenu des rubriques (FR → EN/IT/ES/DE) | Implémenté (`App\Services\TranslationService`, package `mozex/anthropic-laravel`) — nécessite `ANTHROPIC_API_KEY`, voir [`configuration.md`](configuration.md) |
 
 ---
 

@@ -33,7 +33,7 @@ it('propage l\'exception ErrorException quand l\'API échoue', function () {
     $mockMessages = Mockery::mock();
     $mockMessages->shouldReceive('create')
         ->once()
-        ->andThrow(new ErrorException('API failure'));
+        ->andThrow(new ErrorException('API failure', 500));
 
     $mockClient = Mockery::mock();
     $mockClient->shouldReceive('messages')->once()->andReturn($mockMessages);
