@@ -8,6 +8,10 @@ use App\Http\Middleware\SetLocale;
 use Illuminate\View\View;
 use Livewire\Component;
 
+/**
+ * Sélecteur de langue de la page publique (drapeaux SVG). La locale effective
+ * est appliquée par le middleware `SetLocale` via le cookie `locale`.
+ */
 class LocaleSwitcher extends Component
 {
     public string $currentLocale;

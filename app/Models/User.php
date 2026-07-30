@@ -12,6 +12,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * Compte administrateur du back-office — un seul enregistrement en usage normal
+ * (accès unique, pas d'inscription publique). Voir `Database\Seeders\AdminUserSeeder`
+ * et `App\Console\Commands\AdminCredentialsCommand`.
+ */
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable

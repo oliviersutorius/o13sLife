@@ -11,6 +11,10 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+/**
+ * Formulaire back-office d'édition de la rubrique Profil (unique) :
+ * sauvegarde en brouillon (`sauvegarder`) ou publication explicite (`publier`).
+ */
 class ProfilForm extends Component
 {
     use WithFileUploads;

@@ -7,6 +7,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
+/**
+ * Vue hébergeant le composant Livewire `CentreInteret\Index` (CRUD de la rubrique).
+ */
 class CentreInteretController extends Controller
 {
     public function index(): View

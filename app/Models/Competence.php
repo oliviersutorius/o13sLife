@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * Savoir-faire technique groupé par catégorie, avec niveau débutant/intermédiaire/expert.
+ */
 class Competence extends Model
 {
     use HasFactory, HasPublishedSnapshot, HasTranslations;

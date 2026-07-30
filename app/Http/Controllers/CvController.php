@@ -12,6 +12,9 @@ use App\Models\Langue;
 use App\Models\Profil;
 use Illuminate\Support\Str;
 
+/**
+ * Page CV publique : n'affiche que le contenu publié de chaque rubrique.
+ */
 class CvController extends Controller
 {
     public function index()

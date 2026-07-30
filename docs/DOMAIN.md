@@ -1,8 +1,10 @@
 # o13sLife — Modèle de domaine
 
+> **Vérifié le 2026-07-30** par rapport au schéma réel (`database/migrations/`, `app/Models/`). Voir aussi [`docs/database/schema.md`](database/schema.md) et [`docs/EPICS.md`](EPICS.md) pour le détail technique et le statut d'implémentation.
+
 ## Vision
 
-o13sLife est une page web personnelle qui présente un CV de manière soignée et professionnelle. Elle est consultable publiquement par tous (recruteurs, contacts, etc.) et administrée via un back-office privé. Le contenu est multilingue (FR par défaut, EN, IT, ES) et géré via un système brouillon / publication.
+o13sLife est une page web personnelle qui présente un CV de manière soignée et professionnelle. Elle est consultable publiquement par tous (recruteurs, contacts, etc.) et administrée via un back-office privé. Le contenu est multilingue (FR par défaut, EN, IT, ES, **DE**) et géré via un système brouillon / publication.
 
 ---
 
@@ -69,6 +71,8 @@ Un centre d'intérêt personnel.
 | libelle | string | Mot ou courte expression |
 
 ### Message (formulaire de contact)
+⚠️ **Non implémenté à ce jour** — aucune migration, modèle ni route ne réalise cette entité (cf. Epic 6 dans [`EPICS.md`](EPICS.md)). Description ci-dessous conservée à titre de spécification cible.
+
 Un message envoyé via le formulaire de contact.
 
 | Attribut | Type | Description |
@@ -95,7 +99,7 @@ Un message envoyé via le formulaire de contact.
 2. **Brouillon / Publication** : toute modification passe par un état `brouillon` avant d'être visible sur la page publique. La publication est un acte explicite.
 3. **Accès back-office unique** : un seul compte administrateur, pas d'inscription publique.
 4. **Expériences triées** : les expériences professionnelles sont toujours affichées par date de début décroissante.
-5. **Multilingue** : toutes les chaînes de l'interface passent par le système de traduction Laravel. Les données saisies dans le back-office sont traduites manuellement par rubrique.
+5. **Multilingue** : toutes les chaînes de l'interface passent par le système de traduction Laravel. Le contenu des rubriques est traduit **automatiquement** du français vers EN/IT/ES/DE via l'API Anthropic (Claude Haiku), puis peut être relu et validé manuellement par l'administrateur rubrique par rubrique (statuts "validée" / "traduction automatique" / "manquante").
 
 ---
 
@@ -124,6 +128,8 @@ Un message envoyé via le formulaire de contact.
 4. L'administrateur publie explicitement pour rendre les changements visibles.
 
 ### Formulaire de contact
+⚠️ Processus non implémenté à ce jour (cf. entité **Message** ci-dessus).
+
 1. Le visiteur remplit et soumet le formulaire.
 2. Un email est envoyé à l'administrateur (service email à définir lors de l'implémentation de cette feature).
 3. Le message est stocké en base.
@@ -134,7 +140,8 @@ Un message envoyé via le formulaire de contact.
 
 | Service | Rôle | Statut |
 |---|---|---|
-| Service email | Envoi des messages du formulaire de contact | À définir (Mailgun, Resend, SMTP…) |
+| Service email | Envoi des messages du formulaire de contact | À définir (Mailgun, Resend, SMTP…) — formulaire non implémenté |
+| API Anthropic (Claude Haiku) | Traduction automatique du contenu des rubriques (FR → EN/IT/ES/DE) | Implémenté (`App\Services\TranslationService`), mais le package `anthropic-php/laravel` n'est pas encore déclaré dans `composer.json` — voir [`configuration.md`](configuration.md) |
 
 ---
 

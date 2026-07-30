@@ -8,6 +8,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Applique la locale d'affichage du CV (≠ locale d'interface Laravel), lue
+ * depuis le cookie `locale` et retombant sur le français si absente/invalide.
+ */
 class SetLocale
 {
     public const LOCALES = [
