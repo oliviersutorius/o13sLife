@@ -190,6 +190,29 @@ it('ne supprime pas le fichier de la photo encore publiée lors d\'un nouvel upl
     Storage::disk('public')->assertExists($photoPubliee);
 });
 
+it('supprime le fichier de l\'ancienne photo brouillon lors d\'un nouvel upload', function () {
+    Storage::fake('public');
+
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Dev Senior')
+        ->set('email', 'dev@example.com')
+        ->set('photo', UploadedFile::fake()->image('brouillon-a.jpg'))
+        ->call('sauvegarder');
+
+    $photoBrouillonA = Profil::first()->photo;
+    Storage::disk('public')->assertExists($photoBrouillonA);
+
+    Livewire::actingAs($this->admin)
+        ->test(ProfilForm::class)
+        ->set('titre', 'Dev Senior')
+        ->set('email', 'dev@example.com')
+        ->set('photo', UploadedFile::fake()->image('brouillon-b.jpg'))
+        ->call('sauvegarder');
+
+    Storage::disk('public')->assertMissing($photoBrouillonA);
+});
+
 it('publie un profil avec une photo uploadée via publier()', function () {
     Storage::fake('public');
 

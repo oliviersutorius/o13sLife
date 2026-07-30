@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AuthController;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 
 it('affiche la page de login', function () {
     $this->get(route('admin.login'))->assertStatus(200);
@@ -14,6 +16,19 @@ it('redirige vers le dashboard si déjà connecté', function () {
     $this->actingAs($user)
         ->get(route('admin.login'))
         ->assertRedirect(route('admin.dashboard'));
+});
+
+it('showLogin() redirige un admin déjà authentifié vers le dashboard', function () {
+    // Le middleware "guest" intercepte déjà ce cas sur la route ; ce test
+    // exerce directement AuthController::showLogin() pour couvrir son propre
+    // garde-fou (défense en profondeur si la route perdait son middleware).
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $response = (new AuthController)->showLogin();
+
+    expect($response)->toBeInstanceOf(RedirectResponse::class);
+    expect($response->getTargetUrl())->toBe(route('admin.dashboard'));
 });
 
 it('connecte un utilisateur avec des identifiants valides', function () {
