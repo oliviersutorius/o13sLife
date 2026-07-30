@@ -25,6 +25,10 @@ Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 - fix(#26): sépare réellement brouillon et publié via un snapshot JSON ([#26](https://github.com/oliviersutorius/o13sLife/issues/26))
 - fix(#28): rate limiting login admin fiable, `APP_DEBUG=false`, `npm audit fix` ([#28](https://github.com/oliviersutorius/o13sLife/issues/28))
 - fix(#32): identifiants admin configurables via `ADMIN_EMAIL`/`ADMIN_PASSWORD`, ajoute la commande `admin:credentials` ([#32](https://github.com/oliviersutorius/o13sLife/issues/32))
+- fix(#36): déclare `mozex/anthropic-laravel` en dépendance de production — la traduction automatique ne fonctionnait pas en dehors des tests ([#36](https://github.com/oliviersutorius/o13sLife/issues/36))
+
+### 📚 Documentation
+- docs(#34): met à jour toute la documentation technique et fonctionnelle (EPICS, DOMAIN, schema, routes, configuration, CHANGELOG, README, PHPDoc) ([#34](https://github.com/oliviersutorius/o13sLife/issues/34))
 
 ### ⚡ Améliorations de performance
 - perf(#28): élimine le N+1 sur le dashboard admin et ajoute un index sur `is_published` ([#28](https://github.com/oliviersutorius/o13sLife/issues/28))

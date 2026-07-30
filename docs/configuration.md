@@ -25,14 +25,15 @@ Voir aussi [`docs/routes.md`](routes.md) et l'issue [#32](https://github.com/oli
 
 ### Traduction automatique (Claude Haiku)
 
-`App\Services\TranslationService` (utilisé par `TranslateContentJob` et la commande `cv:translate-missing`) appelle l'API Anthropic via le package `anthropic-php/laravel`.
+`App\Services\TranslationService` (utilisé par `TranslateContentJob` et la commande `cv:translate-missing`) appelle l'API Anthropic via le package `mozex/anthropic-laravel` (facade `Anthropic\Laravel\Facades\Anthropic`, requis en dépendance de production depuis l'issue [#36](https://github.com/oliviersutorius/o13sLife/issues/36)).
 
-⚠️ **Ce package n'est actuellement pas déclaré dans `composer.json`** (`require`) — seul un stub minimal existe dans `tests/Stubs/anthropic_stubs.php` pour que la suite de tests s'exécute sans dépendance réelle. En l'état, la traduction automatique **ne fonctionnera pas en dehors des tests** tant que :
+| Variable | Obligatoire | Défaut | Description |
+|---|---|---|---|
+| `ANTHROPIC_API_KEY` | oui | — | Clé API Anthropic (`config/anthropic.php` → `anthropic.api_key`) |
+| `ANTHROPIC_REQUEST_TIMEOUT` | non | `30` (secondes) | Timeout des requêtes vers l'API |
+| `ANTHROPIC_BETA` | non | — | Liste de features beta séparées par des virgules, envoyées sur chaque requête |
 
-1. `composer require anthropic-php/laravel` n'a pas été exécuté ;
-2. la variable d'environnement `ANTHROPIC_API_KEY` n'a pas été renseignée (clé API Anthropic).
-
-Ce point doit être clarifié/complété avant tout déploiement s'appuyant sur la traduction automatique.
+Sans `ANTHROPIC_API_KEY`, toute tentative de traduction (job `TranslateContentJob`, commande `cv:translate-missing`) échoue. La configuration est publiée dans `config/anthropic.php` (`php artisan vendor:publish --provider="Anthropic\Laravel\ServiceProvider"`).
 
 ## Variables Laravel standard pertinentes pour ce projet
 
